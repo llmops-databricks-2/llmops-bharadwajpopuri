@@ -1,0 +1,70 @@
+{
+  "cleanup_duration": 0,
+  "creator_user_name": "bharadwajpopuri@live.com",
+  "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+  "end_time": 1792016799142,
+  "execution_duration": 83000,
+  "job_id": 610331774782002,
+  "job_run_id": 736373943984227,
+  "number_in_job": 736373943984227,
+  "original_attempt_run_id": 736373943984227,
+  "run_duration": 86820,
+  "run_id": 736373943984227,
+  "run_name": "[dev bharadwajpopuri] job-prepare-trials-bharadwajpopuri-dev",
+  "run_page_url": "https://dbc-88df4c2c-4033.cloud.databricks.com/?o=7474648231747660#job/610331774782002/run/736373943984227",
+  "run_type": "JOB_RUN",
+  "setup_duration": 3000,
+  "start_time": 1792016712322,
+  "state": {
+    "life_cycle_state": "TERMINATED",
+    "result_state": "SUCCESS",
+    "state_message": "",
+    "user_cancelled_or_timedout": false
+  },
+  "status": {
+    "state": "TERMINATED",
+    "termination_details": {
+      "code": "SUCCESS",
+      "message": "",
+      "type": "SUCCESS"
+    }
+  },
+  "tasks": [
+    {
+      "attempt_number": 0,
+      "cleanup_duration": 0,
+      "effective_performance_target": "PERFORMANCE_OPTIMIZED",
+      "end_time": 1792016798707,
+      "environment_key": "default",
+      "execution_duration": 83000,
+      "notebook_task": {
+        "base_parameters": {
+          "env": "dev"
+        },
+        "notebook_path": "/Workspace/Users/bharadwajpopuri@live.com/.bundle/dev/llmops-bharadwajpopuri/files/resources/deployment_notebooks/prepare_trials",
+        "source": "WORKSPACE"
+      },
+      "run_id": 808642366520970,
+      "run_if": "ALL_SUCCESS",
+      "run_page_url": "https://dbc-88df4c2c-4033.cloud.databricks.com/?o=7474648231747660#job/610331774782002/run/808642366520970",
+      "setup_duration": 3000,
+      "start_time": 1792016712363,
+      "state": {
+        "life_cycle_state": "TERMINATED",
+        "result_state": "SUCCESS",
+        "state_message": "",
+        "user_cancelled_or_timedout": false
+      },
+      "status": {
+        "state": "TERMINATED",
+        "termination_details": {
+          "code": "SUCCESS",
+          "message": "",
+          "type": "SUCCESS"
+        }
+      },
+      "task_key": "prepare_trials"
+    }
+  ],
+  "trigger": "ONE_TIME"
+}

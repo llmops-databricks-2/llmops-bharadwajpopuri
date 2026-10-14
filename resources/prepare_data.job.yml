@@ -1,0 +1,34 @@
+# The data-preparation job of the Evidence Curator: one serverless notebook task that installs the
+# project wheel (arxiv_curator + evidence_curator), fetches the pinned ClinicalTrials.gov snapshot and
+# writes the trials, trial_references and drug_aliases tables to the target's schema
+# (dev: llmops_dev.bharadwajpopuri). Shaped like hello.job.yml: it runs as whoever deploys the
+# bundle, its name ends with the target so the three environments never collide, and it carries the
+# course usage policy so its cost is attributed to this student.
+#
+# Serverless environment version 5 (Python 3.12.3): the version the lecture specifies, and the one
+# whose base packages match this project's pins (pandas 2.2.3, numpy 2.1.3, pyarrow 21.0.0, openai
+# 2.14.0), so installing the wheel does not downgrade anything in the environment.
+#
+# No schedule in this version: the snapshot is fixed and refreshed by hand (automated refreshes are a
+# listed future enhancement). Run it with `databricks bundle run prepare_trials -t dev`.
+resources:
+  jobs:
+    prepare_trials:
+      name: job-prepare-trials-bharadwajpopuri-${bundle.target}
+      budget_policy_id: "995f545e-7885-3c66-9825-046d051e0122"
+      max_concurrent_runs: 1
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "5"
+            dependencies:
+              - ../dist/*.whl
+
+      tasks:
+        - task_key: prepare_trials
+          environment_key: default
+          timeout_seconds: 1800
+          notebook_task:
+            notebook_path: deployment_notebooks/prepare_trials.py
+            base_parameters:
+              env: ${bundle.target}

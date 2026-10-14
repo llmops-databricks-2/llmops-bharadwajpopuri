@@ -38,7 +38,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where =["src"]
-include = ["arxiv_curator*"]
+include = ["arxiv_curator*", "evidence_curator*"]
 
 [tool.setuptools.dynamic]
 version = { file = "version.txt" }

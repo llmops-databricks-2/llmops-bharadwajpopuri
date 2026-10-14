@@ -1,0 +1,736 @@
+{
+ "studies": [
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "NCT04184622",
+     "orgStudyIdInfo": {
+      "id": "17244"
+     },
+     "secondaryIdInfos": [
+      {
+       "id": "I8F-MC-GPHK",
+       "type": "OTHER",
+       "domain": "Eli Lilly and Company"
+      }
+     ],
+     "organization": {
+      "fullName": "Eli Lilly and Company",
+      "class": "INDUSTRY"
+     },
+     "briefTitle": "A Study of Tirzepatide (LY3298176) in Participants With Obesity or Overweight",
+     "officialTitle": "Efficacy and Safety of Tirzepatide Once Weekly in Participants Without Type 2 Diabetes Who Have Obesity or Are Overweight With Weight- Related Comorbidities: A Randomized, Double-Blind, Placebo-Controlled Trial (SURMOUNT-1)",
+     "acronym": "SURMOUNT-1"
+    },
+    "statusModule": {
+     "statusVerifiedDate": "2025-07",
+     "overallStatus": "COMPLETED",
+     "expandedAccessInfo": {
+      "hasExpandedAccess": false
+     },
+     "startDateStruct": {
+      "date": "2019-12-04",
+      "type": "ACTUAL"
+     },
+     "primaryCompletionDateStruct": {
+      "date": "2022-04-01",
+      "type": "ACTUAL"
+     },
+     "completionDateStruct": {
+      "date": "2024-07-06",
+      "type": "ACTUAL"
+     },
+     "studyFirstSubmitDate": "2019-12-02",
+     "studyFirstSubmitQcDate": "2019-12-02",
+     "studyFirstPostDateStruct": {
+      "date": "2019-12-03",
+      "type": "ACTUAL"
+     },
+     "resultsFirstSubmitDate": "2023-03-30",
+     "resultsFirstSubmitQcDate": "2023-03-30",
+     "resultsFirstPostDateStruct": {
+      "date": "2023-04-24",
+      "type": "ACTUAL"
+     },
+     "lastUpdateSubmitDate": "2025-07-03",
+     "lastUpdatePostDateStruct": {
+      "date": "2025-07-24",
+      "type": "ACTUAL"
+     }
+    },
+    "sponsorCollaboratorsModule": {
+     "responsibleParty": {
+      "type": "SPONSOR"
+     },
+     "leadSponsor": {
+      "name": "Eli Lilly and Company",
+      "class": "INDUSTRY"
+     }
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Overweight",
+      "Obesity"
+     ],
+     "keywords": [
+      "Metabolism and Nutrition Disorder",
+      "Prediabetes"
+     ]
+    },
+    "designModule": {
+     "studyType": "INTERVENTIONAL",
+     "phases": [
+      "PHASE3"
+     ],
+     "designInfo": {
+      "allocation": "RANDOMIZED",
+      "interventionModel": "PARALLEL",
+      "primaryPurpose": "TREATMENT",
+      "maskingInfo": {
+       "masking": "DOUBLE",
+       "whoMasked": [
+        "PARTICIPANT",
+        "INVESTIGATOR"
+       ]
+      }
+     },
+     "enrollmentInfo": {
+      "count": 2539,
+      "type": "ACTUAL"
+     }
+    },
+    "armsInterventionsModule": {
+     "armGroups": [
+      {
+       "label": "Placebo",
+       "type": "PLACEBO_COMPARATOR",
+       "description": "* Primary Treatment Period (Week 0-Week 72): Participants with normoglycemia or prediabetes at the time of randomization received once weekly (QW) subcutaneous (SC) doses of a matching placebo, administered over a period of 72 weeks.\n* Additional Treatment Period (Week 72-Week 176): At week 72, only participants who had prediabetes at the time of randomization and had completed the primary treatment period continued receiving the placebo dose SC QW until week 176.\n* Safety Follow-up Period: Participants who had completed or discontinued the primary treatment period were followed for safety for 4 weeks (weeks 72 - week 76), and those who had completed or discontinued the additional treatment period (prediabetes at randomization) were followed for 17 weeks (week 176 - week 193). No treatment was administered during this period.",
+       "interventionNames": [
+        "Drug: Placebo"
+       ]
+      },
+      {
+       "label": "5 mg Tirzepatide",
+       "type": "EXPERIMENTAL",
+       "description": "* Primary Treatment Period (Week 0-Week 72): Participants with normoglycemia or prediabetes at the time of randomization received QW SC doses of tirzepatide, starting at 2.5 milligrams (mg) and increasing by 2.5 mg every 4 weeks until reaching a dose of 5 mg, which was then maintained up to week 72.\n* Additional Treatment Period (Week 72-Week 176): At week 72, only participants who had prediabetes at the time of randomization and had completed the primary treatment period continued receiving the 5 mg tirzepatide dose SC QW until week 176.\n* Safety Follow-up Period: Participants who had completed or discontinued the primary treatment period were followed for safety for 4 weeks (weeks 72 - week 76), and those who had completed or discontinued the additional treatment period (prediabetes at randomization) were followed for 17 weeks (week 176 - week 193). No treatment was administered during this period.",
+       "interventionNames": [
+        "Drug: Tirzepatide"
+       ]
+      },
+      {
+       "label": "10 mg Tirzepatide",
+       "type": "EXPERIMENTAL",
+       "description": "* Primary Treatment Period (Week 0-Week 72): Participants with normoglycemia or prediabetes at the time of randomization received QW SC doses of tirzepatide, starting at 2.5 mg and increasing by 2.5 mg every 4 weeks until reaching a dose of 10 mg, which was then maintained up to week 72.\n* Additional Treatment Period (Week 72-Week 176): At week 72, only participants who had prediabetes at the time of randomization and had completed the primary treatment period continued receiving the 10 mg tirzepatide dose SC QW until week 176.\n* Safety Follow-up Period: Participants who had completed or discontinued the primary treatment period were followed for safety for 4 weeks (weeks 72 - week 76), and those who had completed or discontinued the additional treatment period (prediabetes at randomization) were followed for 17 weeks (week 176 - week 193). No treatment was administered during this period.",
+       "interventionNames": [
+        "Drug: Tirzepatide"
+       ]
+      },
+      {
+       "label": "15 mg Tirzepatide",
+       "type": "EXPERIMENTAL",
+       "description": "* Primary Treatment Period (Week 0-Week 72): Participants with normoglycemia or prediabetes at the time of randomization received QW SC doses of tirzepatide, starting at 2.5 mg and increasing by 2.5 mg every 4 weeks until reaching a dose of 15 mg, which was then maintained up to week 72.\n* Additional Treatment Period (Week 72-Week 176): At week 72, only participants who had prediabetes at the time of randomization and had completed the primary treatment period continued receiving the 15 mg tirzepatide dose SC QW until week 176.\n* Safety Follow-up Period: Participants who had completed or discontinued the primary treatment period were followed for safety for 4 weeks (weeks 72 - week 76), and those who had completed or discontinued the additional treatment period (prediabetes at randomization) were followed for 17 weeks (week 176 - week 193). No treatment was administered during this period.",
+       "interventionNames": [
+        "Drug: Tirzepatide"
+       ]
+      }
+     ],
+     "interventions": [
+      {
+       "type": "DRUG",
+       "name": "Tirzepatide",
+       "description": "Administered SC",
+       "armGroupLabels": [
+        "10 mg Tirzepatide",
+        "15 mg Tirzepatide",
+        "5 mg Tirzepatide"
+       ],
+       "otherNames": [
+        "LY3298176"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "Placebo",
+       "description": "Administered SC",
+       "armGroupLabels": [
+        "Placebo"
+       ]
+      }
+     ]
+    },
+    "outcomesModule": {
+     "primaryOutcomes": [
+      {
+       "measure": "Percent Change From Baseline in Body Weight (Primary Treatment Period)",
+       "description": "Least Squares (LS) Mean was calculated using mixed-model repeated measures (MMRM) with baseline, analysis country, sex, prediabetes status at randomization, treatment, time, treatment\\*time (Type III sum of squares) in the model.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Percentage of Participants Who Achieve \u22655% Body Weight Reduction (Primary Treatment Period)",
+       "description": "Percentage of participants who achieve greater than or equal to( \u2265) 5% body weight reduction.",
+       "timeFrame": "Week 72"
+      }
+     ],
+     "secondaryOutcomes": [
+      {
+       "measure": "Change From Baseline in Body Weight (Pooled Doses of Tirzepatide 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "LS Mean was calculated using MMRM with baseline, analysis country, sex, prediabetes status at randomization, treatment, time, treatment\\*time (Type III sum of squares) in the model.",
+       "timeFrame": "Baseline, Week 20"
+      },
+      {
+       "measure": "Percentage of Participants Who Achieve \u226510% Body Weight Reduction (Primary Treatment Period)",
+       "description": "Percentage of Participants who Achieve \u226510% Body Weight Reduction",
+       "timeFrame": "Week 72"
+      },
+      {
+       "measure": "Percentage of Participants Who Achieve \u226515% Body Weight Reduction (Primary Treatment Period)",
+       "description": "Percentage of participants who achieve \u226515% body weight reduction.",
+       "timeFrame": "Week 72"
+      },
+      {
+       "measure": "Percentage of Participants Who Achieve \u226520% Body Weight Reduction (Primary Treatment Period)",
+       "description": "Percentage of participants who achieve \u226520% body weight reduction.",
+       "timeFrame": "Week 72"
+      },
+      {
+       "measure": "Change From Baseline in Waist Circumference (Primary Treatment Period)",
+       "description": "LS Mean was calculated using MMRM with baseline, analysis country, sex, prediabetes status at randomization, treatment, time, treatment\\*time (Type III sum of squares) in the model.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Change From Baseline in Short Form Survey-36 Version 2 (SF-36v2) Acute Form Physical Functioning Domain Score at Week 72 (Pooled Doses of Tirzepatide 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "The SF-36v2 acute, 1-week recall version is a 36-item, generic, patient-administered measure designed to assess the following 8 domains: Physical Functioning, Role-Physical, Bodily Pain, General Health, Vitality, Social Functioning, Role-Emotional, and Mental Health. The Physical-Functioning domain assesses limitations due to health \"now\" while the remaining domains assess functioning \"in the past week.\" Each domain is scored individually and information from these 8 domains are further aggregated into 2 health-component summary scores: Physical-Component Summary and Mental-Component Summary. Items are answered on Likert scales of varying lengths (3-, 5-, or 6- point scales).The summary scores range from 0 to 100, with higher scores indicating better levels of function and/or better health.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Percent Change From Baseline in Triglycerides (Pooled Doses of Tirzepatide 5 mg, 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "Percent change from baseline in triglycerides are reported as model-based estimate and Standard Error (SE) from MMRM analysis using log transformation.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Percent Change From Baseline in Total Cholesterol (Pooled Doses of Tirzepatide 5 mg, 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "Results are reported as model-based estimate and SE from MMRM analysis using log transformation.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Percent Change From Baseline in High-Density Lipoprotein (HDL) Cholesterol at Week 72 (Pooled Doses of Tirzepatide 5 mg, 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "Results are reported as model-based estimate and SE from MMRM analysis using log transformation.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Change From Baseline in Systolic Blood Pressure (SBP) (Pooled Doses of Tirzepatide 5 mg, 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "LS Mean was calculated using MMRM with baseline, analysis country, sex, prediabetes status at randomization, treatment, time, treatment\\*time (Type III sum of squares) in the model.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Percent Change From Baseline in Fasting Insulin (Pooled Doses of Tirzepatide 5 mg, 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "Fasting Insulin is a test used to measure the amount of insulin in the body. Results are reported as model-based estimates and SE from MMRM analysis using log transformation.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Percent Change From Baseline in Body Weight (Primary and Additional Treatment Periods : Participants With Prediabetes at Randomization)",
+       "description": "LS Mean was calculated using mixed-model repeated measures (MMRM) with baseline, analysis country, sex, treatment, time, treatment\\*time (Type III sum of squares) in the model.",
+       "timeFrame": "Baseline, Week 176"
+      },
+      {
+       "measure": "Percentage of Participants With Onset of Type 2 Diabetes From Baseline to Week 176 (Primary and Additional Treatment Periods: Participants With Prediabetes at Randomization)",
+       "description": "The percentage of participants with onset of Type 2 diabetes mellitus (T2DM), evaluated as time to onset of T2DM among those who had pre-diabetes at randomization, was reported.\n\nTime to onset of Type 2 diabetes mellitus was defined as the duration from the date of randomization to the adjudication committee-confirmed date of incident diabetes. Participants who did not experience the event were censored.",
+       "timeFrame": "Baseline through Week 176"
+      },
+      {
+       "measure": "Percentage of Participants With Onset of Type 2 Diabetes From Baseline to Week 193 (Primary and Additional Treatment Periods + Safety Follow-up Period: Participants With Prediabetes at Randomization)",
+       "description": "The percentage of participants with onset of Type 2 diabetes mellitus (T2DM), evaluated as time to onset of T2DM among those who had pre-diabetes at randomization, was reported.\n\nTime to onset of Type 2 diabetes mellitus was defined as the duration from the date of randomization to the adjudication committee-confirmed date of incident diabetes. Participants who did not experience the event were censored.",
+       "timeFrame": "Baseline through Week 193"
+      },
+      {
+       "measure": "Change From Baseline in Body Mass Index (BMI) - Primary Treatment Period",
+       "description": "LS Mean was calculated using MMRM with baseline, analysis country, sex, prediabetes status at randomization, treatment, time, treatment\\*time (Type III sum of squares) in the model.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Change From Baseline in Hemoglobin A1c (HbA1c) - Primary Treatment Period",
+       "description": "HbA1c is the glycosylated fraction of hemoglobin A. HbA1c is measured primarily to identify average plasma glucose concentration over prolonged periods of time. LS Mean was calculated using MMRM with baseline, analysis country, sex, prediabetes status at randomization, treatment, time, treatment\\*time (Type III sum of squares) in the model.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Change From Baseline in Fasting Glucose (Primary Treatment Period)",
+       "description": "LS Mean was calculated using MMRM with baseline, analysis country, sex, prediabetes status at randomization, treatment, time, treatment\\*time (Type III sum of squares) in the model.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Percent Change From Baseline in Low-Density Lipoprotein (LDL) Cholesterol (Pooled Doses of Tirzepatide 5 mg, 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "Results are reported as model-based estimate and SE from MMRM analysis using log transformation.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Percent Change From Baseline in Very Low-Density Lipoprotein (VLDL) Cholesterol (Pooled Doses of Tirzepatide 5 mg, 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "Results are reported as model-based estimate and SE from MMRM analysis using log transformation.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Percent Change From Baseline in Free Fatty Acids (Pooled Doses of Tirzepatide 5 mg, 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "Results are reported as model-based estimate and SE from MMRM analysis using log transformation.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Change From Baseline in Diastolic Blood Pressure (DBP) (Pooled Doses of Tirzepatide 5 mg, 10 mg and 15 mg) - Primary Treatment Period",
+       "description": "LS Mean was calculated using MMRM with baseline, analysis country, sex, prediabetes status at randomization, treatment, time, treatment\\*time (Type III sum of squares) in the model.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Percentage of Participants Who Achieve \u22655% Body Weight Reduction (Primary and Additional Treatment Periods : Participants With Prediabetes at Randomization)",
+       "description": "Percentage of Participants Who Achieve \u22655% Body Weight Reduction.",
+       "timeFrame": "Week 176"
+      },
+      {
+       "measure": "Change From Baseline in Impact of Weight on Quality of Life-Lite-Clinical Trials Version (IWQOL-Lite-CT) Physical Function Composite Score at Week 72 (Primary Treatment Period)",
+       "description": "The IWQOL-Lite-CT is a 20-item, obesity-specific patient-reported outcomes (PRO) instrument developed for use in obesity clinical trials. It assesses 2 primary domains of obesity-related health-related quality of life (HRQoL): physical (7 items), and psychosocial (13 items). A 5-item subset of the physical domain, the physical-function composite is also supported. Items in the physical-function composite describe physical impacts related to general and specific physical activities. All items in the physical domain are rated on either a 5-point frequency (\"never\" to \"always\") scale or a 5-point truth (\"not at all true\" to \"completely true\") scale. Total score of IWQOL-Lite-CT composite ranges from 0 to 100, with higher scores reflecting better quality of life.",
+       "timeFrame": "Baseline, Week 72"
+      },
+      {
+       "measure": "Pharmacokinetics (PK): Steady State Area Under the Concentration Time Curve (AUC) of Tirzepatide (Primary Treatment Period)",
+       "description": "PK: Steady State AUC of Tirzepatide. each participant will be assigned via the Interactive Web Response System (IWRS) to one of the sampling PK time windows of 1 to 24 hours, 24 to 96 hours, or 120 to 168 hours postdose.",
+       "timeFrame": "Week 8, 16, and 36, at 1 to 24 hours, 24 to 96 hours, or 120 to 168 hours postdose"
+      }
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\n* Body mass Index (BMI) \u226530 kilograms per square meter (kg/m\u00b2), or \u226527 kg/m\u00b2 and previous diagnosis with at least one of the following comorbidities: hypertension, dyslipidemia, obstructive sleep apnea, cardiovascular disease\n* History of at least one unsuccessful dietary effort ...",
+     "healthyVolunteers": false,
+     "sex": "ALL",
+     "minimumAge": "18 Years",
+     "stdAges": [
+      "ADULT",
+      "OLDER_ADULT"
+     ]
+    },
+    "referencesModule": {
+     "references": [
+      {
+       "pmid": "42831032",
+       "type": "DERIVED",
+       "citation": "Aronne LJ, Vincent RP, Klein KR, Brumm JF, Jouravskaya I, Cao D, Dimitriadis GK, Dunn JP. Evaluation of clinical relevance of weight nadirs and weight regain during 3 years of treatment with tirzepatide in participants with obesity or overweight and prediabetes. Obes Pillars. 2026 Sep 18;20:100333. doi: 10.1016/j.obpill.2026.100333. eCollection 2026 Dec."
+      },
+      {
+       "pmid": "42348366",
+       "type": "DERIVED",
+       "citation": "Kokkinos A, Thethi T, Lee CJ, Neff LM, Stefanski A, Cao D, Rodriguez A, Bartee A. Tirzepatide Efficacy and Tolerability According to Early Weight Response: A Post Hoc Analysis of the SURMOUNT-1 and SURMOUNT-2 Trials. Diabetes Obes Metab. 2026 Sep;28(9):8367-8377. doi: 10.1111/dom.71009. Epub 2026 Jun 25."
+      },
+      {
+       "pmid": "42233927",
+       "type": "DERIVED",
+       "citation": "Sattar N, Linetzky B, Ruotolo G, Verma S, Sourij H, Wang H, Vanderman K, Wilson JM, Griffin RM, Stefanski A, Ridker PM. Comprehensive Long-Term Changes in Cardiovascular Risk Biomarkers With Tirzepatide: A SURMOUNT-1 Post Hoc Analysis. J Am Coll Cardiol. 2026 Jun 3:S0735-1097(26)06416-8. doi: 10.1016/j.jacc.2026.04.044. Online ahead of print."
+      }
+     ],
+     "seeAlsoLinks": [
+      {
+       "label": "A Study of Tirzepatide (LY3298176) in Participants With Obesity or Overweight",
+       "url": "https://trials.lillytrialguide.com/en-US/trial/1o8ZY82Yn01Z4Hqvx0WuME"
+      }
+     ]
+    }
+   },
+   "hasResults": true
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "NCT03548935",
+     "orgStudyIdInfo": {
+      "id": "NN9536-4373"
+     },
+     "secondaryIdInfos": [
+      {
+       "id": "U1111-1200-8053",
+       "type": "OTHER",
+       "domain": "World Health Organization (WHO)"
+      },
+      {
+       "id": "2017-003436-36",
+       "type": "REGISTRY",
+       "domain": "European Medicines Agency (EudraCT)"
+      },
+      {
+       "id": "2017",
+       "type": "NIH",
+       "link": "https://reporter.nih.gov/quickSearch/2017"
+      }
+     ],
+     "organization": {
+      "fullName": "Novo Nordisk A/S",
+      "class": "INDUSTRY"
+     },
+     "briefTitle": "STEP 1: Research Study Investigating How Well Semaglutide Works in People Suffering From Overweight or Obesity",
+     "officialTitle": "Effect and Safety of Semaglutide 2.4 mg Once-weekly in Subjects With Overweight or Obesity",
+     "acronym": "STEP 1"
+    },
+    "statusModule": {
+     "statusVerifiedDate": "2021-11",
+     "overallStatus": "COMPLETED",
+     "expandedAccessInfo": {
+      "hasExpandedAccess": false
+     },
+     "startDateStruct": {
+      "date": "2018-06-04",
+      "type": "ACTUAL"
+     },
+     "primaryCompletionDateStruct": {
+      "date": "2020-03-30",
+      "type": "ACTUAL"
+     },
+     "completionDateStruct": {
+      "date": "2021-03-05",
+      "type": "ACTUAL"
+     },
+     "studyFirstSubmitDate": "2018-05-25",
+     "studyFirstSubmitQcDate": "2018-05-25",
+     "studyFirstPostDateStruct": {
+      "date": "2018-06-07",
+      "type": "ACTUAL"
+     },
+     "resultsFirstSubmitDate": "2021-06-16",
+     "resultsFirstSubmitQcDate": "2021-07-20",
+     "resultsFirstPostDateStruct": {
+      "date": "2021-08-11",
+      "type": "ACTUAL"
+     },
+     "dispFirstSubmitDate": "2021-03-03",
+     "dispFirstSubmitQcDate": "2021-07-20",
+     "dispFirstPostDateStruct": {
+      "date": "2021-08-11",
+      "type": "ACTUAL"
+     },
+     "lastUpdateSubmitDate": "2021-11-18",
+     "lastUpdatePostDateStruct": {
+      "date": "2021-11-19",
+      "type": "ACTUAL"
+     }
+    },
+    "sponsorCollaboratorsModule": {
+     "responsibleParty": {
+      "type": "SPONSOR"
+     },
+     "leadSponsor": {
+      "name": "Novo Nordisk A/S",
+      "class": "INDUSTRY"
+     }
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Metabolism and Nutrition Disorder",
+      "Overweight or Obesity"
+     ]
+    },
+    "designModule": {
+     "studyType": "INTERVENTIONAL",
+     "phases": [
+      "PHASE3"
+     ],
+     "designInfo": {
+      "allocation": "RANDOMIZED",
+      "interventionModel": "PARALLEL",
+      "primaryPurpose": "TREATMENT",
+      "maskingInfo": {
+       "masking": "QUADRUPLE",
+       "maskingDescription": "Sponsor staff involved in the clinical trial is masked according to company standard procedures.",
+       "whoMasked": [
+        "PARTICIPANT",
+        "CARE_PROVIDER",
+        "INVESTIGATOR",
+        "OUTCOMES_ASSESSOR"
+       ]
+      }
+     },
+     "enrollmentInfo": {
+      "count": 1961,
+      "type": "ACTUAL"
+     }
+    },
+    "armsInterventionsModule": {
+     "armGroups": [
+      {
+       "label": "Semaglutide s.c. 2.4 mg once weekly",
+       "type": "EXPERIMENTAL",
+       "description": "Participants will receive semaglutide for 68 weeks.",
+       "interventionNames": [
+        "Drug: Semaglutide"
+       ]
+      },
+      {
+       "label": "Semaglutide placebo",
+       "type": "PLACEBO_COMPARATOR",
+       "description": "Participants will receive semaglutide matching placebo for 68 weeks.",
+       "interventionNames": [
+        "Drug: Placebo (semaglutide)"
+       ]
+      }
+     ],
+     "interventions": [
+      {
+       "type": "DRUG",
+       "name": "Semaglutide",
+       "description": "Participants will receive semaglutide subcutaneous (s.c.; under the skin) injection(s) once-weekly as well as diet and physical activity counselling for 68 weeks. Dose escalation of semaglutide will take place as follows: 0.25 mg from week 1 to 4, 0.5 mg from week 5 to 8, 1.0 mg from week 9 to 12, 1.7 mg from week 13 to 16 and 2.4 mg from week 17 to week 68.",
+       "armGroupLabels": [
+        "Semaglutide s.c. 2.4 mg once weekly"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "Placebo (semaglutide)",
+       "description": "Participants will receive semaglutide matching placebo s.c. injection(s) once-weekly as well as diet and physical activity counselling for 68 weeks.",
+       "armGroupLabels": [
+        "Semaglutide placebo"
+       ]
+      }
+     ]
+    },
+    "outcomesModule": {
+     "primaryOutcomes": [
+      {
+       "measure": "Change in Body Weight (%)",
+       "description": "Change in body weight from baseline (week 0) to week 68 is presented. The endpoint was evaluated based on the data from both in-trial and on-treatment observation periods. In-trial observation period: the uninterrupted time interval from date of randomization (week 0) to date of last contact with trial site (week 75). On-treatment observation period: includes all time intervals in which participants are considered to be on treatment from the first (week 0) to last trial product administration (week 68), including 2 weeks of follow-up. It excludes any period of temporary treatment interruption. Temporary treatment interruption is defined as more than 2 consecutive missed doses (off-treatment period).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Participants Who Achieve 5 or More Percent Body Weight Reduction (Yes/no)",
+       "description": "Number of participants who achieved weight loss more than or equal to 5% (yes/no) at week 68 are presented. The endpoint was evaluated based on the data from both in-trial and on-treatment observation periods. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75). On-treatment observation period: includes all time intervals in which participants are considered to be on treatment from the first (week 0) to last trial product administration (week 68), including 2 weeks of follow-up. It excludes any period of temporary treatment interruption.",
+       "timeFrame": "After week 68"
+      }
+     ],
+     "secondaryOutcomes": [
+      {
+       "measure": "Subjects Who Achieve 10 or More Percent Body Weight Reduction (Yes/no)",
+       "description": "Number of participants who achieved weight loss more than or equal to (\u2265) 10% at week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from date of randomization (week 0) to date of last contact with trial site (week 75).",
+       "timeFrame": "Week 68"
+      },
+      {
+       "measure": "Participants Who Achieve 15 or More Percent Body Weight Reduction (Yes/no)",
+       "description": "Number of participants who achieved more than or equal to (\u2265) 15% weight loss at week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Week 68"
+      },
+      {
+       "measure": "Participants Who Achieve 20 or More Percent Body Weight Reduction (Yes/no)",
+       "description": "Number of participants who achieved more than or equal to (\u2265) 20% weight loss at week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Week 68"
+      },
+      {
+       "measure": "Change in Waist Circumference (cm)",
+       "description": "Change in waist circumference from baseline (week 0) to week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to date of last contact with trial site (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Systolic Blood Pressure (mmHg)",
+       "description": "Change in systolic blood pressure from baseline (week 0) to week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to date of last contact with trial site (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Short Form 36 (SF-36)",
+       "description": "SF-36 is a 36-item patient-reported survey of patient health that measures the participant's overall health-related quality of life (HRQoL). SF-36v2\u2122 questionnaire measured eight domains of functional health and well-being as well as two component summary scores (physical component summary and mental component summary). In the metric of norm-based scores, 50 and 10 corresponds to the mean and standard deviation, respectively, for the 2009 US general population. Change from week 0 in the domain scores and component summary scores were evaluated at week 68. A positive change score indicates an improvement since baseline. These endpoints were evaluated based on the data from in-trial observation period which is the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Impact of Weight on Quality of Life-Lite for Clinical Trial (IWQoL-Lite for CT) Score",
+       "description": "IWQoL-Lite for CT is a modified version of an instrument designed to assess weight-related quality of life. It is used to assess the impact of body weight changes on patients' physical and psychosocial functioning in three composite scores (physical function, physical and psychosocial) and a total score. The scores range between 0-100 where higher scores indicate a better quality of life. A positive change score indicates an improvement since baseline. These endpoints were evaluated based on the data from in-trial observation period which is the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Body Weight (kg)",
+       "description": "Change in body weight from baseline (week 0) to week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Body Mass Index (BMI) (kg/m2)",
+       "description": "Change in body mass index from baseline (week 0) to week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in HbA1C (%)",
+       "description": "Change in glycosylated haemoglobin (HbA1c) from baseline (week 0) to week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in HbA1C (mmol/Mol)",
+       "description": "Change in HbA1c from baseline (week 0) to week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Fasting Plasma Glucose (FPG) (mg/dL)",
+       "description": "Change in fasting plasma glucose from baseline (week 0) to week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Fasting Serum Insulin (mIU/L) - Ratio to Baseline",
+       "description": "Change in fasting serum insulin from week 0 to week 68 is presented as ratio to baseline. Fasting serum insulin was measured in milli-international units per milliliter (mIU/mL). The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Diastolic Blood Pressure (mmHg)",
+       "description": "Change in diastolic blood pressure from baseline (week 0) to week 68 is presented. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Total Cholesterol (mg/dL) - Ratio to Baseline",
+       "description": "Change in fasting total cholesterol from baseline (week 0) to week 68 is presented as ratio to baseline. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in High-density Lipoproteins (HDL) (mg/dL) - Ratio to Baseline",
+       "description": "Change in fasting HDL from baseline (week 0) to week 68 is presented as ratio to baseline. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Low-density Lipoproteins (LDL) (mg/dL) - Ratio to Baseline",
+       "description": "Change in fasting LDL from baseline (week 0) to week 68 is presented as ratio to baseline. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Very Low-density Lipoproteins (VLDL) (mg/dL) - Ratio to Baseline",
+       "description": "Change in fasting VLDL from baseline (week 0) to week 68 is presented as ratio to baseline. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Free Fatty Acids (mg/dL) - Ratio to Baseline",
+       "description": "Change in fasting free fatty acids from baseline (week 0) to week 68 is presented as ratio to baseline. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Triglycerides (mg/dL) - Ratio to Baseline",
+       "description": "Change in fasting triglycerides from baseline (week 0) to week 68 is presented as ratio to baseline. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in High Sensitivity C-Reactive Protein (hsCRP) - (mg/L) - Ratio to Baseline",
+       "description": "Change in high sensitivity C-reactive protein from baseline (week 0) to week 68 is presented as ratio to baseline. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Plasminogen Activator Inhibitor-1 (PAI-1) Activity (AU/ml) - Ratio to Baseline",
+       "description": "Change in plasminogen activator inhibitor-1 activity from baseline (week 0) to week 68 is presented as ratio to baseline. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Soluble Leptin Receptor (ng/mL) - Ratio to Baseline",
+       "description": "Change in soluble leptin receptor from baseline (week 0) to week 68 is presented as ratio to baseline. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Leptin (ng/mL) - Ratio to Baseline",
+       "description": "Change in leptin from baseline (week 0) to week 68 is presented as ratio to baseline. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Body Composition (Total Fat Mass) (%)",
+       "description": "Change in body composition (total fat mass) from baseline (week 0) to week 68 is presented. Body composition was assessed using Dual Energy X-ray Absorpmetry (DEXA). The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Body Composition (Total Fat Mass) (kg)",
+       "description": "Change in body composition (total fat mass) from baseline (week 0) to week 68 is presented. Body composition was assessed using Dual Energy X-ray Absorpmetry (DEXA). The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Body Composition (Lean Body Mass) (%)",
+       "description": "Change in body composition (lean body mass) from baseline (week 0) to week 68 is presented. Body composition was assessed using DEXA. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Body Composition (Lean Body Mass) (kg)",
+       "description": "Change in body composition (lean body mass) from baseline (week 0) to week 68 is presented. Body composition was assessed using DEXA. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Body Composition (Visceral Fat Mass) (%)",
+       "description": "Change in body composition (visceral fat mass) from baseline (week 0) to week 68 is presented. Body composition was assessed using DEXA. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Body Composition (Visceral Fat Mass) (kg)",
+       "description": "Change in body composition (visceral fat mass) from baseline (week 0) to week 68 is presented. Body composition was assessed using DEXA. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Body Weight (%) - DEXA Subpopulation",
+       "description": "Change in body weight from baseline (week 0) to week 68 is presented in DEXA subpopulation. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Body Weight (kg) - DEXA Subpopulation",
+       "description": "Change in body weight from baseline (week 0) to week 68 is presented in DEXA subpopulation. The endpoint was evaluated based on the data from in-trial observation period. In-trial observation period: the uninterrupted time interval from start of randomization (week 0) to last trial-related subject-site contact (week 75).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Participants Who Achieve \"Responder Definition Value\" (Yes/no) for SF-36 Physical Functioning Score",
+       "description": "The observed number of participants experiencing a meaningful within participant improvement in SF-36 Physical function after 68 weeks was determined based on two different thresholds. The threshold of 4.3 is the default generic responder threshold defined in SF-36 manual for a general population. The threshold of 3.7 is specific for the population with overweight or obesity included in the study and calculated using patient global rating anchor questionnaires to reflect participants' own perspective based on FDA recommendations. In the reported data, \"Yes\" infers the number of participants who have achieved an improvement in score greater than or equal to the threshold and \"No\" infers number of participants who have not achieved an improvement in score greater than or equal to the threshold. The endpoint was evaluated based on the in-trial observation period which is the uninterrupted time interval from randomization (week 0) to last trial related subject-site contact (week 75).",
+       "timeFrame": "After week 68"
+      },
+      {
+       "measure": "Participants Who Achieve \"Responder Definition Value\" (Yes/no) for IWQoL-Lite for CT Physical Function Domain (5-items) Score",
+       "description": "The observed number of participants experiencing a meaningful within participant improvement in IWQOL-Lite-CT physical function after 68 weeks was determined based on two different thresholds. The threshold of 20 was a preliminary responder threshold based on earlier studies. The threshold of 14.6 is specific for the population with overweight or obesity included in the study and calculated using patient global rating anchor questionnaires to reflect participants' own perspective based on FDA recommendations. In the reported data, \"Yes\" infers the number of participants who have achieved an improvement in score greater than or equal to the threshold and \"No\" infers the number of participants who have not achieved an improvement in score greater than or equal to the threshold. The endpoint was evaluated based on the in-trial observation period. In trial observation period: the uninterrupted time interval from randomization (week 0) to last trial related subject-site contact (week 75).",
+       "timeFrame": "After week 68"
+      },
+      {
+       "measure": "Number of Treatment Emergent Adverse Events (TEAEs)",
+       "description": "An adverse event (AE) was defined as any unfavorable and unintended sign (including an abnormal laboratory finding), symptom or disease temporally associated with the use of a product, whether or not considered related to the product. All AEs mentioned here are treatment emergent adverse events (TEAE) defined as an event for which the onset of the event occurs in the on-treatment period. The endpoint was evaluated based on the data from on-treatment observation period. On-treatment observation period: includes all time intervals in which participants are considered to be on treatment from the first (week 0) to last trial product administration (week 68), including 7 weeks of follow-up. It excludes any period of temporary treatment interruption. Temporary treatment interruption is defined as more than 7 consecutive missed doses (off-treatment period).",
+       "timeFrame": "Baseline (week 0) to week 75"
+      },
+      {
+       "measure": "Number of Serious Adverse Events (SAEs)",
+       "description": "A serious adverse event (SAE) is defined as any untoward medical occurrence that at any dose results in death, or is life-threatening, or requires inpatient hospitalization or causes prolongation of existing hospitalization results in persistent or significant disability/incapacity, or may have caused a congenital anomaly/birth defect, or requires intervention to prevent permanent impairment or damage. The SAEs occurred from week 0 to week 75 is presented. The endpoint was evaluated based on the data from on-treatment observation period. On-treatment observation period: includes all time intervals in which participants are considered to be on treatment from the first (week 0) to last trial product administration (week 68), including 7 weeks of follow-up. It excludes any period of temporary treatment interruption. Temporary treatment interruption is defined as more than 7 consecutive missed doses (off-treatment period).",
+       "timeFrame": "Baseline (week 0) to week 75"
+      },
+      {
+       "measure": "Change in Pulse",
+       "description": "Change in pulse from baseline (week 0) to week 68 is presented. The endpoint was evaluated based on the data from on-treatment observation period. On-treatment observation period: includes all time intervals in which participants are considered to be on treatment from the first (week 0) to last trial product administration (week 68) including 2 weeks of follow-up. It excludes any period of temporary treatment interruption. Temporary treatment interruption is defined as more than 2 consecutive missed doses (off-treatment period).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Amylase - Ratio to Baseline",
+       "description": "Change in amylase (measured as units per litre \\[U/L\\]) is presented as ratio to baseline. The endpoint was evaluated based on the data from on-treatment observation period. On-treatment observation period: includes all time intervals in which participants are considered to be on treatment from the first (week 0) to last trial product administration (week 68) including 2 weeks of follow-up. It excludes any period of temporary treatment interruption. Temporary treatment interruption is defined as more than 2 consecutive missed doses (off-treatment period).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Lipase - Ratio to Baseline",
+       "description": "Change in lipase (measured as units per litre \\[U/L\\]) is presented as ratio to baseline. The endpoint was evaluated based on the data from on-treatment observation period. On-treatment observation period: includes all time intervals in which participants are considered to be on treatment from the first (week 0) to last trial product administration (week 68) including 2 weeks of follow-up. It excludes any period of temporary treatment interruption. Temporary treatment interruption is defined as more than 2 consecutive missed doses (off-treatment period).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      },
+      {
+       "measure": "Change in Calcitonin - Ratio to Baseline",
+       "description": "Change in calcitonin (measured as ng/L) is presented as ratio to baseline. The endpoint was evaluated based on the data from on-treatment observation period. On-treatment observation period: includes all time intervals in which participants are considered to be on treatment from the first (week 0) to last trial product administration (week 68) including 2 weeks of follow-up. It excludes any period of temporary treatment interruption. Temporary treatment interruption is defined as more than 2 consecutive missed doses (off-treatment period).",
+       "timeFrame": "Baseline (week 0) to week 68"
+      }
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\nMain phase:\n\n* Male or female, age greater than or equal to 18 years at the time of signing informed consent\n* Body mass index (BMI) greater than or equal to 30.0 kg/sqm or greater than or equal to 27.0 kg/sqm with the presence of at least one of the following weight-related com ...",
+     "healthyVolunteers": false,
+     "sex": "ALL",
+     "minimumAge": "18 Years",
+     "stdAges": [
+      "ADULT",
+      "OLDER_ADULT"
+     ]
+    },
+    "referencesModule": {
+     "references": [
+      {
+       "pmid": "32441473",
+       "type": "BACKGROUND",
+       "citation": "Kushner RF, Calanna S, Davies M, Dicker D, Garvey WT, Goldman B, Lingvay I, Thomsen M, Wadden TA, Wharton S, Wilding JPH, Rubino D. Semaglutide 2.4 mg for the Treatment of Obesity: Key Elements of the STEP Trials 1 to 5. Obesity (Silver Spring). 2020 Jun;28(6):1050-1061. doi: 10.1002/oby.22794."
+      },
+      {
+       "pmid": "33567185",
+       "type": "RESULT",
+       "citation": "Wilding JPH, Batterham RL, Calanna S, Davies M, Van Gaal LF, Lingvay I, McGowan BM, Rosenstock J, Tran MTD, Wadden TA, Wharton S, Yokote K, Zeuthen N, Kushner RF; STEP 1 Study Group. Once-Weekly Semaglutide in Adults with Overweight or Obesity. N Engl J Med. 2021 Mar 18;384(11):989-1002. doi: 10.1056/NEJMoa2032183. Epub 2021 Feb 10."
+      },
+      {
+       "pmid": "40980163",
+       "type": "DERIVED",
+       "citation": "Schattenberg JM, Gronbaek H, Kliers I, Ladelund S, Long MT, Nygard SB, Sanyal AJ, Davies MJ. Proteomic signatures reflect effects of semaglutide treatment for MASH. JHEP Rep. 2025 Jul 22;7(10):101521. doi: 10.1016/j.jhepr.2025.101521. eCollection 2025 Oct."
+      }
+     ]
+    }
+   },
+   "hasResults": true
+  }
+ ]
+}
