@@ -1,0 +1,4 @@
+Run URL: https://dbc-88df4c2c-4033.cloud.databricks.com/jobs/610331774782002/runs/250976392519306?o=7474648231747660
+
+2026-10-17 21:27:37 "[dev bharadwajpopuri] job-prepare-trials-bharadwajpopuri-dev" RUNNING
+2026-10-17 21:28:59 "[dev bharadwajpopuri] job-prepare-trials-bharadwajpopuri-dev" TERMINATED SUCCESS

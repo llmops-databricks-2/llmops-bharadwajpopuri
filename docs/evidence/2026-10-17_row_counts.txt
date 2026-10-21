@@ -1,0 +1,6 @@
+Row counts on 2026-10-17, SQL warehouse 2203095b00ed7e5b:
+SELECT 'trials' AS table_name, COUNT(*) AS n FROM llmops_dev.bharadwajpopuri.trials UNION ALL SELECT 'trial_references' AS table_name, COUNT(*) AS n FROM llmops_dev.bharadwajpopuri.trial_references UNION ALL SELECT 'drug_aliases' AS table_name, COUNT(*) AS n FROM llmops_dev.bharadwajpopuri.drug_aliases
+
+trials: 30
+trial_references: 184
+drug_aliases: 19

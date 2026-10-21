@@ -1,0 +1,52 @@
+llmops_dev.bharadwajpopuri.trials  (MANAGED, DELTA, updated 2026-10-18T01:28:39+00:00)
+  nct_id                       string
+  therapy                      string
+  program                      string
+  seed_note                    string
+  acronym                      string
+  brief_title                  string
+  official_title               string
+  study_type                   string
+  phase                        string
+  overall_status               string
+  lead_sponsor                 string
+  sponsor_class                string
+  collaborators                string
+  conditions                   string
+  interventions                string
+  intervention_therapies       string
+  enrollment_count             int
+  enrollment_type              string
+  allocation                   string
+  intervention_model           string
+  masking                      string
+  primary_purpose              string
+  primary_outcomes             string
+  n_primary_outcomes           int
+  start_date                   string
+  primary_completion_date      string
+  completion_date              string
+  sex                          string
+  minimum_age                  string
+  maximum_age                  string
+  eligibility_criteria         string
+  has_results                  boolean
+  results_first_post_date      string
+  last_update_post_date        string
+  n_references                 int
+  source                       string
+  source_url                   string
+  retrieved_at                 timestamp
+
+llmops_dev.bharadwajpopuri.trial_references  (MANAGED, DELTA, updated 2026-10-18T01:28:43+00:00)
+  nct_id                       string
+  pmid                         string
+  reference_type               string
+  citation                     string
+  source                       string
+  retrieved_at                 timestamp
+
+llmops_dev.bharadwajpopuri.drug_aliases  (MANAGED, DELTA, updated 2026-10-18T01:28:46+00:00)
+  therapy                      string
+  alias                        string
+  alias_type                   string

@@ -1,5 +1,26 @@
 # llmops-bharadwajpopuri
 
+## Project: Pharma R&D Evidence Curator
+
+An agent that helps a clinical development scientist review the evidence landscape of an indication
+(obesity; semaglutide 2.4 mg, tirzepatide, liraglutide 3.0 mg) from open-access papers and
+ClinicalTrials.gov records, and writes short briefs in which every claim cites its source. The course's
+arXiv curator transposed to pharma: see [docs/use_case.md](docs/use_case.md).
+
+| Where | What |
+|---|---|
+| `src/evidence_curator/` | project code: pinned trial snapshot (`seed.py`), drug aliases (`aliases.py`), ClinicalTrials.gov API v2 ingestion (`trials.py`), Unity Gateway client (`gateway.py`) |
+| `resources/prepare_data.job.yml` + `resources/deployment_notebooks/prepare_trials.py` | the data-preparation job: registry snapshot → `trials`, `trial_references`, `drug_aliases` in the target schema |
+| `notebooks/gateway_experiment.py` | model-service experiment through Unity Gateway, with token usage and latency recorded |
+| `docs/` | [use case](docs/use_case.md), [environment setup](docs/environment_setup.md), [trial snapshot](docs/trial_snapshot.md), [gateway experiment log](docs/gateway_experiment_log.md), evidence of runs |
+| `tests/` | unit tests on recorded API responses (no network, no workspace) |
+
+The course package `arxiv_curator` is untouched so lecture code keeps working; both packages ship in the
+one wheel the bundle builds. Run the data job in development with
+`databricks bundle deploy -t dev && databricks bundle run prepare_trials -t dev`.
+
+## Course repository
+
 Your repository for the LLMOps course on Databricks. Everything you need in
 the course workspace was provisioned for you before you got this repo, and every id is already in
 `project_config.yml`: you configure nothing.
