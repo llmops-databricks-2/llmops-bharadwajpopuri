@@ -1,0 +1,59 @@
+# The document pipeline of the Evidence Curator: three serverless notebook tasks in one job, each
+# installing the project wheel (arxiv_curator + evidence_curator), chained so that one
+# `databricks bundle run prepare_papers -t dev` rebuilds the whole retrieval foundation:
+#
+#   ingest_papers      registry-linked PMC open-access papers → PDFs in the volume + `papers`
+#   process_papers     ai_parse_document → chunks (two strategies) → gateway embeddings → `paper_chunks`
+#   sync_paper_chunks  `paper_chunks` → Lakebase synced table (pgvector), indexes, verification
+#
+# The course keeps data processing and synchronisation in separate jobs; here the dependency between
+# them is stated explicitly instead, so a sync never runs against a half-written chunk table. A task
+# can still be rerun alone from the Jobs UI ("repair run"), which is how a re-sync after a chunking
+# change is done without re-parsing (parsing is skipped for PDFs already in `parsed_papers` anyway).
+#
+# Same conventions as prepare_data.job.yml: runs as whoever deploys the bundle, name ends with the
+# target, serverless environment version 5, the course usage policy on the job. No schedule: the
+# corpus is a snapshot, refreshed by hand.
+resources:
+  jobs:
+    prepare_papers:
+      name: job-prepare-papers-bharadwajpopuri-${bundle.target}
+      budget_policy_id: "995f545e-7885-3c66-9825-046d051e0122"
+      max_concurrent_runs: 1
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "5"
+            dependencies:
+              - ../dist/*.whl
+
+      tasks:
+        - task_key: ingest_papers
+          environment_key: default
+          timeout_seconds: 1800
+          notebook_task:
+            notebook_path: deployment_notebooks/ingest_papers.py
+            base_parameters:
+              env: ${bundle.target}
+              max_papers: "24"
+
+        - task_key: process_papers
+          depends_on:
+            - task_key: ingest_papers
+          environment_key: default
+          timeout_seconds: 3600
+          notebook_task:
+            notebook_path: deployment_notebooks/process_papers.py
+            base_parameters:
+              env: ${bundle.target}
+              strategies: "element,section"
+
+        - task_key: sync_paper_chunks
+          depends_on:
+            - task_key: process_papers
+          environment_key: default
+          timeout_seconds: 3600
+          notebook_task:
+            notebook_path: deployment_notebooks/sync_paper_chunks.py
+            base_parameters:
+              env: ${bundle.target}

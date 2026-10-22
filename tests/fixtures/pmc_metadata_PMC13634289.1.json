@@ -1,0 +1,25 @@
+{
+ "pmcid": "PMC13634289",
+ "version": 1,
+ "pmid": 42831032,
+ "doi": "10.1016/j.obpill.2026.100333",
+ "mid": null,
+ "title": "Evaluation of clinical relevance of weight nadirs and weight regain during 3 years of treatment with tirzepatide in participants with obesity or overweight and prediabetes",
+ "citation": "Obes Pillars. 2026 Sep 18;20:100333. doi: 10.1016/j.obpill.2026.100333",
+ "is_pmc_openaccess": true,
+ "is_manuscript": false,
+ "is_historical_ocr": false,
+ "is_retracted": false,
+ "license_code": "CC BY",
+ "pdf_url": "s3://pmc-oa-opendata/PMC13634289.1/PMC13634289.1.pdf?md5=ceffafacbfcfe018982e9124d4a585fa",
+ "xml_url": "s3://pmc-oa-opendata/PMC13634289.1/PMC13634289.1.xml?md5=41e84ebab86fc09861215aae83a3aef0",
+ "text_url": "s3://pmc-oa-opendata/PMC13634289.1/PMC13634289.1.txt?md5=54b4aa4d89106afdf5dcef2bfbbe8e5a",
+ "media_urls": [
+  "s3://pmc-oa-opendata/PMC13634289.1/ga1.webp?md5=e173b1a5532c7da964b6dc850830db6d",
+  "s3://pmc-oa-opendata/PMC13634289.1/gr1.webp?md5=ba7770da0d166f3e62d9d864bcf47ed5",
+  "s3://pmc-oa-opendata/PMC13634289.1/gr2.webp?md5=ca3caac5a1d27c998da16f93ee77a1a3",
+  "s3://pmc-oa-opendata/PMC13634289.1/gr3.webp?md5=dde93a492181da2ee260f9553641b807",
+  "s3://pmc-oa-opendata/PMC13634289.1/gr4.webp?md5=7acf3a6562dc711d6fafc0e0cfb20925",
+  "s3://pmc-oa-opendata/PMC13634289.1/mmc1.pdf?md5=2ac119845725b37f816758d23578ac1f"
+ ]
+}

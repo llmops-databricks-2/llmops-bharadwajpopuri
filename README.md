@@ -9,15 +9,19 @@ arXiv curator transposed to pharma: see [docs/use_case.md](docs/use_case.md).
 
 | Where | What |
 |---|---|
-| `src/evidence_curator/` | project code: pinned trial snapshot (`seed.py`), drug aliases (`aliases.py`), ClinicalTrials.gov API v2 ingestion (`trials.py`), Unity Gateway client (`gateway.py`) |
-| `resources/prepare_data.job.yml` + `resources/deployment_notebooks/prepare_trials.py` | the data-preparation job: registry snapshot → `trials`, `trial_references`, `drug_aliases` in the target schema |
+| `src/evidence_curator/` | project code: pinned trial snapshot (`seed.py`), drug aliases (`aliases.py`), ClinicalTrials.gov API v2 ingestion (`trials.py`), Unity Gateway client and batched embeddings (`gateway.py`), PMC open-access paper acquisition (`papers.py`), the two chunking strategies (`chunking.py`), the Lakebase pgvector store: synced table, indexes, semantic / keyword / hybrid SQL (`vector_store.py`) |
+| `resources/prepare_data.job.yml` + `resources/deployment_notebooks/prepare_trials.py` | lecture 1, the structured data: registry snapshot → `trials`, `trial_references`, `drug_aliases` in the target schema |
+| `resources/papers.job.yml` + `resources/deployment_notebooks/{ingest_papers,process_papers,sync_paper_chunks}.py` | lecture 2, the documents: registry-linked PMC papers → volume + `papers`; `ai_parse_document` → chunks (two strategies) → gateway embeddings → `paper_chunks`; Lakebase synced table + indexes + verification |
 | `notebooks/gateway_experiment.py` | model-service experiment through Unity Gateway, with token usage and latency recorded |
-| `docs/` | [use case](docs/use_case.md), [environment setup](docs/environment_setup.md), [trial snapshot](docs/trial_snapshot.md), [gateway experiment log](docs/gateway_experiment_log.md), evidence of runs |
-| `tests/` | unit tests on recorded API responses (no network, no workspace) |
+| `notebooks/chunk_inspection.py`, `notebooks/retrieval_experiments.py` | lecture 2 inspection (parsed documents, chunk quality and sizes, the model's token counts) and the retrieval experiments (semantic, filtered, keyword, hybrid on a fixed question set); they write the two reports below |
+| `docs/` | [use case](docs/use_case.md), [environment setup](docs/environment_setup.md), [trial snapshot](docs/trial_snapshot.md), [gateway experiment log](docs/gateway_experiment_log.md), [retrieval foundation](docs/retrieval_foundation.md) (decisions), [corpus](docs/corpus.md), [chunking report](docs/chunking_report.md), [retrieval log](docs/retrieval_log.md), evidence of runs |
+| `tests/` | unit tests on recorded API responses and hand-built parser output (no network, no workspace, no Postgres) |
 
-The course package `arxiv_curator` is untouched so lecture code keeps working; both packages ship in the
-one wheel the bundle builds. Run the data job in development with
-`databricks bundle deploy -t dev && databricks bundle run prepare_trials -t dev`.
+The course package `arxiv_curator` is kept as the course ships it, apart from two optional fields added to
+`ProjectConfig` for values the onboarding already put in `project_config.yml` (`lakebase_instance`,
+`usage_policy_id`); both packages ship in the one wheel the bundle builds. The volume is named
+`evidence_files` (the template's `arxiv_files` was a suggestion). Run the jobs in development with
+`databricks bundle deploy -t dev && databricks bundle run prepare_trials -t dev && databricks bundle run prepare_papers -t dev`.
 
 ## Course repository
 

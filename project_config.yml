@@ -11,7 +11,7 @@ usage_policy_id: "995f545e-7885-3c66-9825-046d051e0122"
 dev:
   catalog: "llmops_dev"
   schema: "bharadwajpopuri"
-  volume: "arxiv_files"
+  volume: "evidence_files"
   llm_endpoint: "course_ops.gateway.chat"
   embedding_endpoint: "course_ops.gateway.embed"
   warehouse_id: "2203095b00ed7e5b"
@@ -23,7 +23,7 @@ dev:
 acc:
   catalog: "llmops_acc"
   schema: "bharadwajpopuri"
-  volume: "arxiv_files"
+  volume: "evidence_files"
   llm_endpoint: "course_ops.gateway.chat"
   embedding_endpoint: "course_ops.gateway.embed"
   warehouse_id: "2203095b00ed7e5b"
@@ -35,7 +35,7 @@ acc:
 prd:
   catalog: "llmops_prd"
   schema: "bharadwajpopuri"
-  volume: "arxiv_files"
+  volume: "evidence_files"
   llm_endpoint: "course_ops.gateway.chat"
   embedding_endpoint: "course_ops.gateway.embed"
   warehouse_id: "2203095b00ed7e5b"

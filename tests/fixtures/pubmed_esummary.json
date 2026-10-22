@@ -1,0 +1,336 @@
+{
+ "header": {
+  "type": "esummary",
+  "version": "0.3"
+ },
+ "result": {
+  "uids": [
+   "42831032",
+   "33567185"
+  ],
+  "42831032": {
+   "uid": "42831032",
+   "pubdate": "2026 Dec",
+   "epubdate": "2026 Sep 18",
+   "source": "Obes Pillars",
+   "authors": [
+    {
+     "name": "Aronne LJ",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Vincent RP",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Klein KR",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Brumm JF",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Jouravskaya I",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Cao D",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Dimitriadis GK",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Dunn JP",
+     "authtype": "Author",
+     "clusterid": ""
+    }
+   ],
+   "lastauthor": "Dunn JP",
+   "title": "Evaluation of clinical relevance of weight nadirs and weight regain during 3 years of treatment with tirzepatide in participants with obesity or overweight and prediabetes.",
+   "sorttitle": "evaluation of clinical relevance of weight nadirs and weight regain during 3 years of treatment with tirzepatide in participants with obesity or overweight and prediabetes",
+   "volume": "20",
+   "issue": "",
+   "pages": "100333",
+   "lang": [
+    "eng"
+   ],
+   "nlmuniqueid": "9918697364706676",
+   "issn": "",
+   "essn": "2667-3681",
+   "pubtype": [
+    "Journal Article"
+   ],
+   "recordstatus": "PubMed",
+   "pubstatus": "258",
+   "articleids": [
+    {
+     "idtype": "pubmed",
+     "idtypen": 1,
+     "value": "42831032"
+    },
+    {
+     "idtype": "pmc",
+     "idtypen": 8,
+     "value": "PMC13634289"
+    },
+    {
+     "idtype": "pmcid",
+     "idtypen": 5,
+     "value": "pmc-id: PMC13634289;"
+    },
+    {
+     "idtype": "doi",
+     "idtypen": 3,
+     "value": "10.1016/j.obpill.2026.100333"
+    },
+    {
+     "idtype": "pii",
+     "idtypen": 4,
+     "value": "S2667-3681(26)00089-6"
+    }
+   ],
+   "references": [],
+   "attributes": [
+    "Has Abstract"
+   ],
+   "pmcrefcount": 19,
+   "fulljournalname": "Obesity pillars",
+   "elocationid": "doi: 10.1016/j.obpill.2026.100333",
+   "doctype": "citation",
+   "srccontriblist": [],
+   "booktitle": "",
+   "medium": "",
+   "edition": "",
+   "publisherlocation": "",
+   "publishername": "",
+   "srcdate": "",
+   "reportnumber": "",
+   "availablefromurl": "",
+   "locationlabel": "",
+   "doccontriblist": [],
+   "docdate": "",
+   "bookname": "",
+   "chapter": "",
+   "sortpubdate": "2026/09/18 00:00",
+   "sortfirstauthor": "Aronne LJ",
+   "vernaculartitle": ""
+  },
+  "33567185": {
+   "uid": "33567185",
+   "pubdate": "2021 Mar 18",
+   "epubdate": "2021 Feb 10",
+   "source": "N Engl J Med",
+   "authors": [
+    {
+     "name": "Wilding JPH",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Batterham RL",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Calanna S",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Davies M",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Van Gaal LF",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Lingvay I",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "McGowan BM",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Rosenstock J",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Tran MTD",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Wadden TA",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Wharton S",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Yokote K",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Zeuthen N",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Kushner RF",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "STEP 1 Study Group",
+     "authtype": "CollectiveName",
+     "clusterid": ""
+    }
+   ],
+   "lastauthor": "Kushner RF",
+   "title": "Once-Weekly Semaglutide in Adults with Overweight or Obesity.",
+   "sorttitle": "once weekly semaglutide in adults with overweight or obesity",
+   "volume": "384",
+   "issue": "11",
+   "pages": "989-1002",
+   "lang": [
+    "eng"
+   ],
+   "nlmuniqueid": "0255562",
+   "issn": "0028-4793",
+   "essn": "1533-4406",
+   "pubtype": [
+    "Journal Article",
+    "Multicenter Study",
+    "Randomized Controlled Trial",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "recordstatus": "PubMed - indexed for MEDLINE",
+   "pubstatus": "256",
+   "articleids": [
+    {
+     "idtype": "pubmed",
+     "idtypen": 1,
+     "value": "33567185"
+    },
+    {
+     "idtype": "doi",
+     "idtypen": 3,
+     "value": "10.1056/NEJMoa2032183"
+    }
+   ],
+   "references": [
+    {
+     "refsource": "N Engl J Med. 2021 Mar 18;384(11):1066-1067. doi: 10.1056/NEJMe2101705.",
+     "reftype": "Comment in",
+     "pmid": 33567184,
+     "note": ""
+    },
+    {
+     "refsource": "Eur Heart J. 2021 May 1;42(17):1652-1653. doi: 10.1093/eurheartj/ehab175.",
+     "reftype": "Comment in",
+     "pmid": 33822032,
+     "note": ""
+    },
+    {
+     "refsource": "Cell Metab. 2021 Apr 6;33(4):705-706. doi: 10.1016/j.cmet.2021.03.012.",
+     "reftype": "Comment in",
+     "pmid": 33826913,
+     "note": ""
+    },
+    {
+     "refsource": "Nat Med. 2021 Apr;27(4):589-590. doi: 10.1038/s41591-021-01319-4.",
+     "reftype": "Comment in",
+     "pmid": 33859431,
+     "note": ""
+    },
+    {
+     "refsource": "MMW Fortschr Med. 2021 May;163(9):26. doi: 10.1007/s15006-021-9940-5.",
+     "reftype": "Comment in",
+     "pmid": 33961244,
+     "note": ""
+    },
+    {
+     "refsource": "N Engl J Med. 2021 Jul 1;385(1):e4. doi: 10.1056/NEJMc2106918.",
+     "reftype": "Comment in",
+     "pmid": 34192446,
+     "note": ""
+    },
+    {
+     "refsource": "N Engl J Med. 2021 Jul 1;385(1):e4. doi: 10.1056/NEJMc2106918.",
+     "reftype": "Comment in",
+     "pmid": 34192447,
+     "note": ""
+    },
+    {
+     "refsource": "N Engl J Med. 2021 Jul 1;385(1):e4. doi: 10.1056/NEJMc2106918.",
+     "reftype": "Comment in",
+     "pmid": 34192448,
+     "note": ""
+    },
+    {
+     "refsource": "N Engl J Med. 2021 Jul 1;385(1):e4. doi: 10.1056/NEJMc2106918.",
+     "reftype": "Comment in",
+     "pmid": 34192449,
+     "note": ""
+    },
+    {
+     "refsource": "N Engl J Med. 2021 Jul 1;385(1):e4. doi: 10.1056/NEJMc2106918.",
+     "reftype": "Comment in",
+     "pmid": 34192450,
+     "note": ""
+    },
+    {
+     "refsource": "Ann Intern Med. 2021 Jul;174(7):JC80. doi: 10.7326/ACPJ202107200-080.",
+     "reftype": "Comment in",
+     "pmid": 34224258,
+     "note": ""
+    }
+   ],
+   "attributes": [
+    "Has Abstract"
+   ],
+   "pmcrefcount": "",
+   "fulljournalname": "The New England journal of medicine",
+   "elocationid": "doi: 10.1056/NEJMoa2032183",
+   "doctype": "citation",
+   "srccontriblist": [],
+   "booktitle": "",
+   "medium": "",
+   "edition": "",
+   "publisherlocation": "",
+   "publishername": "",
+   "srcdate": "",
+   "reportnumber": "",
+   "availablefromurl": "",
+   "locationlabel": "",
+   "doccontriblist": [],
+   "docdate": "",
+   "bookname": "",
+   "chapter": "",
+   "sortpubdate": "2021/03/18 00:00",
+   "sortfirstauthor": "Wilding JPH",
+   "vernaculartitle": ""
+  }
+ }
+}

@@ -1,0 +1,34 @@
+{
+ "status": "ok",
+ "response-date": "2026-10-22 16:43:17",
+ "request": {
+  "format": "json",
+  "tool": "evidence-curator",
+  "idtype": "pmid",
+  "ids": [
+   "21844879",
+   "23942319",
+   "19853906"
+  ]
+ },
+ "records": [
+  {
+   "doi": "10.1038/ijo.2011.158",
+   "pmcid": "PMC3374073",
+   "pmid": 21844879,
+   "requested-id": "21844879"
+  },
+  {
+   "doi": "10.1038/ijo.2013.149",
+   "pmcid": "PMC4010971",
+   "pmid": 23942319,
+   "requested-id": "23942319"
+  },
+  {
+   "pmid": 19853906,
+   "requested-id": "19853906",
+   "status": "error",
+   "errmsg": "Identifier not found in PMC"
+  }
+ ]
+}

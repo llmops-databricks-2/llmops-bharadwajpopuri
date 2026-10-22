@@ -11,7 +11,7 @@ fresh headers on every request, so OAuth tokens are refreshed rather than copied
 """
 
 import time
-from collections.abc import Iterator
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -131,3 +131,60 @@ def chat(
         reasoning=reasoning,
         raw_usage=usage.model_dump() if usage is not None else {},
     )
+
+
+@dataclass
+class EmbeddingUsage:
+    """What the embedding step records: how many calls, tokens and seconds a batch of texts cost."""
+
+    model: str
+    n_texts: int = 0
+    n_calls: int = 0
+    prompt_tokens: int = 0
+    latency_s: float = 0.0
+    dimension: int | None = None
+
+    def add(self, n_texts: int, prompt_tokens: int | None, latency_s: float, dimension: int | None) -> None:
+        """Accumulate one call's accounting."""
+        self.n_texts += n_texts
+        self.n_calls += 1
+        self.prompt_tokens += prompt_tokens or 0
+        self.latency_s = round(self.latency_s + latency_s, 2)
+        self.dimension = self.dimension or dimension
+
+
+def embed_texts(
+    client: OpenAI, model: str, texts: Sequence[str], batch_size: int = 32
+) -> tuple[list[list[float]], EmbeddingUsage]:
+    """Embed texts through the gateway's embeddings API in batches; vectors come back in input order.
+
+    The same client and model service must embed the documents and, later, the queries: vectors from
+    different models are not comparable even when their dimension matches. The gateway reports
+    `usage.prompt_tokens` per call, which is the model's own token count of the batch, the number to
+    trust over the four-characters-per-token estimate.
+    """
+    usage = EmbeddingUsage(model=model)
+    vectors: list[list[float]] = []
+    for start in range(0, len(texts), batch_size):
+        batch = list(texts[start : start + batch_size])
+        started = time.perf_counter()
+        response = client.embeddings.create(model=model, input=batch)
+        latency = time.perf_counter() - started
+        ordered = sorted(response.data, key=lambda d: d.index)
+        if len(ordered) != len(batch):
+            raise RuntimeError(f"embedding call returned {len(ordered)} vectors for {len(batch)} inputs")
+        batch_vectors = [list(d.embedding) for d in ordered]
+        vectors.extend(batch_vectors)
+        usage.add(
+            n_texts=len(batch),
+            prompt_tokens=getattr(response.usage, "prompt_tokens", None) if response.usage else None,
+            latency_s=latency,
+            dimension=len(batch_vectors[0]) if batch_vectors else None,
+        )
+    return vectors, usage
+
+
+def count_tokens(client: OpenAI, model: str, text: str) -> int | None:
+    """Measure the model's token count of one text by embedding it alone and reading the usage report."""
+    response = client.embeddings.create(model=model, input=[text])
+    return getattr(response.usage, "prompt_tokens", None) if response.usage else None
