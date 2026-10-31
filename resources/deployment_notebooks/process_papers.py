@@ -158,15 +158,25 @@ for strategy in strategies:
 # MAGIC `course_ops.gateway.embed` embeds the chunk text in batches; `usage.prompt_tokens` is the model's
 # MAGIC own count of what it was sent, the number that matters against its 8,192-token window. The
 # MAGIC same service embeds queries at search time, so documents and questions share one vector space.
+# MAGIC
+# MAGIC The gateway enforces a tokens-per-minute limit per user on this service (the first run of this
+# MAGIC task ended with `REQUEST_LIMIT_EXCEEDED` after a burst of batches). `embed_texts` now waits out
+# MAGIC the window on a 429 and retries, halving a batch that is over budget by itself; the hits, the
+# MAGIC waiting time and the splits are recorded in the usage summary, which is the batch-throughput
+# MAGIC measurement the lecture asked for. Several minutes of waiting on a few hundred thousand tokens
+# MAGIC is expected and is not an error.
 
 # COMMAND ----------
 
 client = gateway_client(WorkspaceClient())
 started = time.perf_counter()
-vectors, usage = embed_texts(client, cfg.embedding_endpoint, [r["text"] for r in chunk_rows], batch_size=32)
+vectors, usage = embed_texts(
+    client, cfg.embedding_endpoint, [r["text"] for r in chunk_rows], batch_size=32, log_every=10
+)
 print(
     f"embedded {usage.n_texts} chunks in {usage.n_calls} calls, {usage.prompt_tokens} prompt tokens, "
-    f"{usage.latency_s} s in calls ({time.perf_counter() - started:.0f} s wall), dimension {usage.dimension}"
+    f"{usage.latency_s} s in calls ({time.perf_counter() - started:.0f} s wall), dimension {usage.dimension}; "
+    f"rate limit: {usage.rate_limit_hits} hits, {usage.rate_limit_wait_s} s waited, {usage.batch_splits} batch splits"
 )
 assert usage.dimension == 1024, f"expected 1,024-dimensional vectors, got {usage.dimension}"
 now = datetime.now(UTC)
@@ -236,6 +246,10 @@ summary = {
         "prompt_tokens": usage.prompt_tokens,
         "latency_s": usage.latency_s,
         "dimension": usage.dimension,
+        "rate_limit_hits": usage.rate_limit_hits,
+        "rate_limit_wait_s": usage.rate_limit_wait_s,
+        "batch_splits": usage.batch_splits,
+        "wall_s": round(time.perf_counter() - started),
     },
     "chunks_table": chunks_table,
 }

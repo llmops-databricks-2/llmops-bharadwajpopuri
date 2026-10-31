@@ -42,7 +42,7 @@ from psycopg import sql
 
 from arxiv_curator.config import ProjectConfig
 from evidence_curator.chunking import SECTIONS
-from evidence_curator.gateway import gateway_client
+from evidence_curator.gateway import create_embeddings, gateway_client
 
 EMBEDDING_DIMENSION = 1024  # GTE Large through course_ops.gateway.embed
 DEFAULT_DATABASE = "databricks_postgres"  # every Lakebase branch starts with this database
@@ -384,7 +384,7 @@ class LakebaseChunkStore:
 
     def embed_query(self, query: str) -> list[float]:
         """Embed a question with `cfg.embedding_endpoint`, the service that embedded the chunks."""
-        response = self.embedding_client.embeddings.create(model=self.cfg.embedding_endpoint, input=[query])
+        response = create_embeddings(self.embedding_client, self.cfg.embedding_endpoint, [query])
         return list(response.data[0].embedding)
 
     def _select(self, extra: sql.Composable) -> sql.Composed:
