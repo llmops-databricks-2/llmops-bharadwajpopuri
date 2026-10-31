@@ -1,0 +1,49 @@
+llmops_dev.bharadwajpopuri.papers  (MANAGED, DELTA, updated 2026-10-31T18:37:32+00:00, delta.enableChangeDataFeed=-)
+  pmcid                        string
+  pmc_version                  int
+  pmid                         string
+  doi                          string
+  title                        string
+  journal                      string
+  pub_year                     int
+  pub_date                     string
+  epub_date                    string
+  authors                      string
+  license                      string
+  is_manuscript                boolean
+  nct_ids                      string
+  therapies                    string
+  reference_types              string
+  n_trials                     int
+  citation                     string
+  pdf_url                      string
+  volume_path                  string
+  source                       string
+  retrieved_at                 timestamp
+
+llmops_dev.bharadwajpopuri.parsed_papers  (MANAGED, DELTA, updated 2026-10-31T18:24:33+00:00, delta.enableChangeDataFeed=-)
+  path                         string
+  parsed_content               string
+  processed                    bigint
+
+llmops_dev.bharadwajpopuri.paper_chunks  (MANAGED, DELTA, updated 2026-10-31T18:40:06+00:00, delta.enableChangeDataFeed=true)
+  id                           string
+  pmcid                        string
+  chunk_seq                    int
+  strategy                     string
+  kind                         string
+  section                      string
+  page                         int
+  element_ids                  string
+  n_chars                      int
+  n_tokens_est                 int
+  text                         string
+  title                        string
+  journal                      string
+  pub_year                     int
+  therapies                    string
+  nct_ids                      string
+  license                      string
+  embedding                    array<float>
+  embedding_model              string
+  processed                    timestamp

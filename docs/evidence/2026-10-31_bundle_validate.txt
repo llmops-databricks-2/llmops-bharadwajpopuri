@@ -1,0 +1,8 @@
+Name: llmops-bharadwajpopuri
+Target: dev
+Workspace:
+  Host: https://dbc-88df4c2c-4033.cloud.databricks.com
+  User: bharadwajpopuri@live.com
+  Path: /Workspace/Users/bharadwajpopuri@live.com/.bundle/dev/llmops-bharadwajpopuri
+
+Validation OK!

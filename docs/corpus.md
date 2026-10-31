@@ -1,16 +1,6 @@
 # The paper corpus
 
-Resolved on 2026-10-22 from the registry's publication links (`trial_references`, 184 links to 123 distinct PMIDs) by
-`evidence_curator.papers`: 73 PMIDs are held by PubMed Central; 54 of those are usable, in the Open Access Subset under
-a Creative Commons licence with a PDF (21 CC BY, 15 CC BY-NC, 22 CC BY-NC-ND). The other 19 are excluded: 8 have no
-article version in the PMC Article Datasets, 4 are CC-licensed but without a PDF, 3 are open access without a
-machine-readable licence code, 4 are text-mining-only author manuscripts. The cap of 24 is filled round-robin across the
-three therapies, trial-result papers first, then the paper that adds the most trials not yet represented, then the most
-recent; the 30 usable papers left out are one `max_papers` change away.
-
-Licence as PubMed Central's dataset reports it; `Link` is how the registry labels the paper's relation to each trial
-(RESULT: reports the trial's results; DERIVED: found by PubMed linkage; BACKGROUND: cited by the sponsor). This file is
-rewritten from the `papers` table by `notebooks/chunk_inspection.py` after each ingestion run.
+24 open-access papers from PubMed Central, selected by `evidence_curator.papers` from the publication links ClinicalTrials.gov records for the pinned trials (see the `ingest_papers` task for the resolution funnel). Licence as PubMed Central's dataset reports it; `reference_types` is how the registry labels the paper's link to each trial (RESULT: reports the trial's results; DERIVED: found by PubMed linkage; BACKGROUND: cited by the sponsor).
 
 | PMCID | Therapies | Year | Journal | Licence | Link | Trials | Title |
 |---|---|---:|---|---|---|---|---|
@@ -39,8 +29,4 @@ rewritten from the `papers` table by `notebooks/chunk_inspection.py` after each 
 | PMC12933229 | tirzepatide | 2026 | Obesity (Silver Spring) | CC BY | DERIVED | NCT04184622 | Efficacy and Safety of Tirzepatide in Japanese Participants With Obesity: A Subpopulation Analysis of the SURMOUNT-1 Trial |
 | PMC13287229 | tirzepatide | 2026 | Patient | CC BY-NC | DERIVED | NCT05412004 | Patients' Experiences of Obstructive Sleep Apnea and Tirzepatide Treatment: An Exit Interview Study |
 
-Trials with at least one paper in the corpus: 20 of 30 (NCT00422058, NCT00781937, NCT01272219, NCT01272232, NCT01557166, NCT02963935, NCT03548935, NCT03548987, NCT03552757, NCT03574597, NCT03693430, NCT04074161, NCT04102189, NCT04184622, NCT04657003, NCT04657016, NCT04660643, NCT04844918, NCT05412004, NCT05822830).
-
-Pinned trials without an open-access paper here (their evidence comes from the registry's posted results): the semaglutide
-phase 2 dose-finding trial, STEP 3, STEP 6, STEP UP, STEP Young, SURMOUNT-MMO, the tirzepatide adolescent trial, SCALE Teens,
-SCALE Insulin and SCALE KIDS.
+Trials with at least one paper in the corpus: 20 of 30.

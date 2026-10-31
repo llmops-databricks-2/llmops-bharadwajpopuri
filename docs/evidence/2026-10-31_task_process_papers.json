@@ -1,0 +1,39 @@
+{
+  "papers_parsed_total": 24,
+  "papers_parsed_this_run": 0,
+  "papers_chunked": 24,
+  "chunks_by_strategy": {
+    "element": {
+      "count": 1044,
+      "min": 1,
+      "p50": 559,
+      "p95": 3164,
+      "max": 7261,
+      "mean": 886.7,
+      "over_limit": 0
+    },
+    "section": {
+      "count": 1097,
+      "min": 11,
+      "p50": 884,
+      "p95": 1472,
+      "max": 1509,
+      "mean": 851.3,
+      "over_limit": 0
+    }
+  },
+  "tables_as_chunks": 132,
+  "embedding": {
+    "model": "course_ops.gateway.embed",
+    "texts": 2141,
+    "calls": 67,
+    "prompt_tokens": 491842,
+    "latency_s": 34.8,
+    "dimension": 1024,
+    "rate_limit_hits": 4,
+    "rate_limit_wait_s": 60.0,
+    "batch_splits": 0,
+    "wall_s": 115
+  },
+  "chunks_table": "llmops_dev.bharadwajpopuri.paper_chunks"
+}

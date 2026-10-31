@@ -1,0 +1,8 @@
+Row counts on 2026-10-31, SQL warehouse 2203095b00ed7e5b:
+SELECT 'papers' AS k, COUNT(*) AS n FROM llmops_dev.bharadwajpopuri.papers UNION ALL SELECT 'parsed_papers' AS k, COUNT(*) AS n FROM llmops_dev.bharadwajpopuri.parsed_papers UNION ALL SELECT 'paper_chunks' AS k, COUNT(*) AS n FROM llmops_dev.bharadwajpopuri.paper_chunks UNION ALL SELECT concat('paper_chunks/', strategy) AS k, COUNT(*) AS n FROM llmops_dev.bharadwajpopuri.paper_chunks GROUP BY strategy
+
+paper_chunks: 2141
+paper_chunks/element: 1044
+paper_chunks/section: 1097
+papers: 24
+parsed_papers: 24

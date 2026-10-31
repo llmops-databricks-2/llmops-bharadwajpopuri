@@ -1,0 +1,16 @@
+{
+  "name": "synced_tables/llmops_dev.bharadwajpopuri.paper_chunks_synced",
+  "detailed_state": "SYNCED_TABLE_ONLINE_NO_PENDING_UPDATE",
+  "pipeline_id": "1b4ecf09-aea3-45be-bc7e-6a4077aca2b6",
+  "last_sync_time": null,
+  "last_processed_commit_version": null,
+  "message": "Synced table creation succeeded using Delta Live Tables: https://dbc-88df4c2c-4033.cloud.databricks.com#joblist/pipelines/1b4ecf09-aea3-45be-bc7e-6a4077aca2b6/updates/7c9a4734-10d6-48f3-b3a8-0fe8b3762e71.",
+  "spec": {
+    "source": null,
+    "primary_key_columns": null,
+    "scheduling_policy": null,
+    "branch": null,
+    "postgres_database": null,
+    "type_overrides": null
+  }
+}
