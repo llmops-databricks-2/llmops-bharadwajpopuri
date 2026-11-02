@@ -14,8 +14,8 @@ arXiv curator transposed to pharma: see [docs/use_case.md](docs/use_case.md).
 | `resources/papers.job.yml` + `resources/deployment_notebooks/{ingest_papers,process_papers,sync_paper_chunks}.py` | lecture 2, the documents: registry-linked PMC papers → volume + `papers`; `ai_parse_document` → chunks (two strategies) → gateway embeddings → `paper_chunks`; Lakebase synced table + indexes + verification |
 | `notebooks/gateway_experiment.py` | model-service experiment through Unity Gateway, with token usage and latency recorded |
 | `notebooks/chunk_inspection.py`, `notebooks/retrieval_experiments.py` | lecture 2 inspection (parsed documents, chunk quality and sizes, the model's token counts) and the retrieval experiments (semantic, filtered, keyword, hybrid on a fixed question set); they write the two reports below |
-| `docs/` | [use case](docs/use_case.md), [environment setup](docs/environment_setup.md), [trial snapshot](docs/trial_snapshot.md), [gateway experiment log](docs/gateway_experiment_log.md), [retrieval foundation](docs/retrieval_foundation.md) (decisions), [corpus](docs/corpus.md), [chunking report](docs/chunking_report.md), [retrieval log](docs/retrieval_log.md), evidence of runs |
-| `tests/` | unit tests on recorded API responses and hand-built parser output (no network, no workspace, no Postgres) |
+| `docs/` | [use case](docs/use_case.md), [environment setup](docs/environment_setup.md), [trial snapshot](docs/trial_snapshot.md), [gateway experiment log](docs/gateway_experiment_log.md), [retrieval foundation](docs/retrieval_foundation.md) (decisions), [corpus](docs/corpus.md), [chunking report](docs/chunking_report.md), [retrieval log](docs/retrieval_log.md) |
+| `tests/` | unit tests on hand-built service responses and parser output (no network, no workspace, no Postgres, no data files) |
 
 The course package `arxiv_curator` is kept as the course ships it, apart from two optional fields added to
 `ProjectConfig` for values the onboarding already put in `project_config.yml` (`lakebase_instance`,

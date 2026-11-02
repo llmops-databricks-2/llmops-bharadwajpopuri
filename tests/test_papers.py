@@ -1,4 +1,8 @@
-"""Tests of the PMC paper acquisition on recorded responses (no network, no workspace)."""
+"""Tests of the PMC paper acquisition (no network, no workspace).
+
+The service responses below are hand-trimmed samples of what the three services returned on
+2026-10-22, reduced to the fields the parsers read; recorded responses are not kept in the repository.
+"""
 
 import hashlib
 import json
@@ -21,7 +25,82 @@ from evidence_curator.papers import (
     s3_https,
 )
 
-FIXTURES = Path(__file__).parent / "fixtures"
+# PMC ID converter: two PMIDs held by PMC, one that is not.
+IDCONV_RESPONSE = {
+    "status": "ok",
+    "records": [
+        {"doi": "10.1038/ijo.2011.158", "pmcid": "PMC3374073", "pmid": 21844879, "requested-id": "21844879"},
+        {"doi": "10.1038/ijo.2013.149", "pmcid": "PMC4010971", "pmid": 23942319, "requested-id": "23942319"},
+        {"pmid": 19853906, "requested-id": "19853906", "status": "error", "errmsg": "Identifier not found in PMC"},
+    ],
+}
+
+# ListObjectsV2 on the PMC Article Datasets bucket: two article versions as common prefixes.
+BUCKET_LISTING = (
+    '<?xml version="1.0" encoding="UTF-8"?>'
+    '<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Name>pmc-oa-opendata</Name>'
+    "<Prefix>PMC11370360.</Prefix><KeyCount>2</KeyCount><MaxKeys>1000</MaxKeys><Delimiter>/</Delimiter>"
+    "<IsTruncated>false</IsTruncated><CommonPrefixes><Prefix>PMC11370360.1/</Prefix></CommonPrefixes>"
+    "<CommonPrefixes><Prefix>PMC11370360.2/</Prefix></CommonPrefixes></ListBucketResult>"
+)
+
+# The dataset's per-version metadata object (`metadata/PMC13634289.1.json`).
+ARTICLE_METADATA = {
+    "pmcid": "PMC13634289",
+    "version": 1,
+    "pmid": 42831032,
+    "doi": "10.1016/j.obpill.2026.100333",
+    "title": "Evaluation of clinical relevance of weight nadirs and weight regain during 3 years of treatment with tirzepatide",
+    "citation": "Obes Pillars. 2026 Sep 18;20:100333. doi: 10.1016/j.obpill.2026.100333",
+    "is_pmc_openaccess": True,
+    "is_manuscript": False,
+    "is_retracted": False,
+    "license_code": "CC BY",
+    "pdf_url": "s3://pmc-oa-opendata/PMC13634289.1/PMC13634289.1.pdf?md5=ceffafacbfcfe018982e9124d4a585fa",
+}
+
+# PubMed esummary for two PMIDs: a print-issue paper and an online-first one.
+ESUMMARY_RESPONSE = {
+    "result": {
+        "uids": ["42831032", "33567185"],
+        "42831032": {
+            "uid": "42831032",
+            "pubdate": "2026 Dec",
+            "epubdate": "2026 Sep 18",
+            "source": "Obes Pillars",
+            "fulljournalname": "Obesity pillars",
+            "title": "Evaluation of clinical relevance of weight nadirs and weight regain during 3 years of treatment with tirzepatide.",
+            "authors": [{"name": "Aronne LJ"}, {"name": "Vincent RP"}, {"name": "Dunn JP"}],
+            "articleids": [
+                {"idtype": "pubmed", "value": "42831032"},
+                {"idtype": "doi", "value": "10.1016/j.obpill.2026.100333"},
+            ],
+        },
+        "33567185": {
+            "uid": "33567185",
+            "pubdate": "2021 Mar 18",
+            "epubdate": "2021 Feb 10",
+            "source": "N Engl J Med",
+            "fulljournalname": "The New England journal of medicine",
+            "title": "Once-Weekly Semaglutide in Adults with Overweight or Obesity.",
+            "authors": [
+                {"name": "Wilding JPH"},
+                {"name": "Batterham RL"},
+                {"name": "Calanna S"},
+                {"name": "Kushner RF"},
+                {"name": "STEP 1 Study Group"},
+            ],
+            "articleids": [
+                {"idtype": "pubmed", "value": "33567185"},
+                {"idtype": "doi", "value": "10.1056/NEJMoa2032183"},
+            ],
+        },
+    }
+}
+
+
+def _json(payload: dict) -> bytes:
+    return json.dumps(payload).encode()
 
 
 def _serve(responses: dict[str, bytes]) -> tuple[Callable[..., bytes], list[str]]:
@@ -40,7 +119,7 @@ def _serve(responses: dict[str, bytes]) -> tuple[Callable[..., bytes], list[str]
 
 def test_pmcids_for_keeps_only_articles_held_by_pmc(monkeypatch: pytest.MonkeyPatch) -> None:
     """PMIDs without a PMC record come back as error records and are left out of the mapping."""
-    fake_get, calls = _serve({papers.IDCONV_URL: (FIXTURES / "pmc_idconv.json").read_bytes()})
+    fake_get, calls = _serve({papers.IDCONV_URL: _json(IDCONV_RESPONSE)})
     monkeypatch.setattr(papers, "_get", fake_get)
     monkeypatch.setattr(papers.time, "sleep", lambda _: None)
 
@@ -52,7 +131,7 @@ def test_pmcids_for_keeps_only_articles_held_by_pmc(monkeypatch: pytest.MonkeyPa
 
 def test_article_versions_lists_prefixes_and_latest_sorts_numerically(monkeypatch: pytest.MonkeyPatch) -> None:
     """Versions are read from the bucket listing; the latest is chosen numerically, not lexically."""
-    fake_get, calls = _serve({"list-type=2": (FIXTURES / "pmc_listing.xml").read_bytes()})
+    fake_get, calls = _serve({"list-type=2": BUCKET_LISTING.encode()})
     monkeypatch.setattr(papers, "_get", fake_get)
 
     versions = article_versions("PMC11370360")
@@ -68,9 +147,7 @@ def test_article_versions_lists_prefixes_and_latest_sorts_numerically(monkeypatc
 
 def test_parse_article_reads_the_dataset_metadata() -> None:
     """The per-version JSON maps onto the article dataclass with HTTPS PDF URL and checksum."""
-    metadata = json.loads((FIXTURES / "pmc_metadata_PMC13634289.1.json").read_text())
-
-    article = parse_article(metadata)
+    article = parse_article(ARTICLE_METADATA)
 
     assert (article.pmcid, article.version, article.pmid) == ("PMC13634289", 1, "42831032")
     assert article.license_code == "CC BY" and article.is_open_access and not article.is_retracted
@@ -92,8 +169,7 @@ def test_parse_article_reads_the_dataset_metadata() -> None:
 )
 def test_usable_applies_the_corpus_policy(changes: dict, usable: bool) -> None:
     """Only open-access, CC-licensed, unretracted versions with a PDF enter the corpus."""
-    metadata = json.loads((FIXTURES / "pmc_metadata_PMC13634289.1.json").read_text()) | changes
-    assert parse_article(metadata).usable is usable
+    assert parse_article(ARTICLE_METADATA | changes).usable is usable
 
 
 def test_s3_https_rewrites_bucket_urls_only() -> None:
@@ -107,7 +183,7 @@ def test_s3_https_rewrites_bucket_urls_only() -> None:
 
 def test_pubmed_summaries_extracts_journal_dates_authors_and_doi(monkeypatch: pytest.MonkeyPatch) -> None:
     """Esummary records give journal, dates, author string and DOI per PMID."""
-    fake_get, calls = _serve({papers.ESUMMARY_URL: (FIXTURES / "pubmed_esummary.json").read_bytes()})
+    fake_get, calls = _serve({papers.ESUMMARY_URL: _json(ESUMMARY_RESPONSE)})
     monkeypatch.setattr(papers, "_get", fake_get)
     monkeypatch.setattr(papers.time, "sleep", lambda _: None)
 

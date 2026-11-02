@@ -92,6 +92,10 @@ short-lived token minted by the SDK; nothing is copied into code or output.
   individually; an inside-window and a beyond-window probe (`chunking_report.md`).
 - **Retrieval.** The same eight questions through every mode, hit@5 against the trial each
   question is about, latency per call, and the overlap between modes (`retrieval_log.md`).
+- **Where the record is.** The dev run of 2026-10-31 is job run 427363127837771; the CLI output of
+  each step and the tasks' exit summaries were captured but are kept out of git (`docs/evidence/` is
+  ignored, at the reviewers' request), so the numbers in this document and the two reports are the
+  record.
 
 ## Known limitations
 
