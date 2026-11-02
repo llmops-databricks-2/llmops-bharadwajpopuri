@@ -178,3 +178,94 @@ def test_search_sql_is_composed_with_identifiers_quoted(cfg: ProjectConfig) -> N
     assert statement.startswith('SELECT c."id", c."pmcid", c."chunk_seq"') and statement.endswith(
         'FROM "bharadwajpopuri"."paper_chunks_synced" AS c'
     )
+
+
+class _Cursor:
+    def __init__(self, rows: list[tuple]) -> None:
+        self.description = [type("Col", (), {"name": n})() for n in ("id", "score")]
+        self._rows = rows
+
+    def fetchall(self) -> list[tuple]:
+        return self._rows
+
+
+class _Conn:
+    """A fake psycopg connection that records every statement with its parameters."""
+
+    def __init__(self, rows: list[tuple]) -> None:
+        self.rows = rows
+        self.calls: list[tuple[str, list]] = []
+
+    def execute(self, statement: sql.Composed, params: list) -> _Cursor:
+        self.calls.append((statement.as_string(None), list(params)))
+        return _Cursor(self.rows)
+
+
+@pytest.fixture
+def store_with_fake_connection(cfg: ProjectConfig, monkeypatch: pytest.MonkeyPatch) -> tuple[LakebaseChunkStore, _Conn]:
+    """Build a store whose `connect()` yields a recording connection and whose query embedding is fixed."""
+    from contextlib import contextmanager
+
+    conn = _Conn(rows=[("PMC1:section:0001", 0.9), ("PMC2:section:0002", 0.8)])
+    store = LakebaseChunkStore(cfg, workspace=_Workspace())  # type: ignore[arg-type]
+
+    @contextmanager
+    def fake_connect(autocommit: bool = True):  # noqa: ANN202 - a context manager stand-in
+        yield conn
+
+    monkeypatch.setattr(store, "connect", fake_connect)
+    monkeypatch.setattr(store, "embed_query", lambda query: [0.5, 0.25])
+    return store, conn
+
+
+def test_search_sql_and_parameter_order(store_with_fake_connection: tuple[LakebaseChunkStore, _Conn]) -> None:
+    """Semantic search binds the vector twice (score and order), then the filters, then the limit."""
+    store, conn = store_with_fake_connection
+
+    rows = store.search("weight regain", num_results=3, filters=SearchFilters(therapy="semaglutide", year_from=2022))
+
+    statement, params = conn.calls[-1]
+    assert (
+        "1 - (c.embedding <=> %s::vector) AS score" in statement
+        and "ORDER BY c.embedding <=> %s::vector LIMIT %s" in statement
+    )
+    assert "c.embedding IS NOT NULL" in statement and '"c"."strategy" = %s' in statement
+    assert params == ["[0.5,0.25]", "section", "semaglutide", 2022, "[0.5,0.25]", 3]
+    assert [r["id"] for r in rows] == ["PMC1:section:0001", "PMC2:section:0002"]
+
+
+def test_keyword_sql_matches_any_term_and_ranks_all_terms_first(
+    store_with_fake_connection: tuple[LakebaseChunkStore, _Conn],
+) -> None:
+    """Default keyword search ORs the stemmed terms, flags full matches, and orders by that flag then rank."""
+    store, conn = store_with_fake_connection
+
+    store.keyword_search("apnea-hypopnea index AHI", num_results=5, filters=SearchFilters(nct_id="NCT05412004"))
+
+    statement, params = conn.calls[-1]
+    assert "replace(plainto_tsquery('english', %s)::text, ' & ', ' | ')::tsquery" in statement
+    assert (
+        "(to_tsvector('english', coalesce(\"c\".title, '') || ' ' || coalesce(\"c\".text, '')) @@ plainto_tsquery('english', %s)) AS all_terms"
+        in statement
+    )
+    assert statement.endswith("ORDER BY all_terms DESC, score DESC, c.id LIMIT %s")
+    assert params == ["apnea-hypopnea index AHI"] * 3 + ["section", "NCT05412004", 5]
+
+    store.keyword_search("apnea-hypopnea index AHI", require_all_terms=True)
+    statement, params = conn.calls[-1]
+    assert "replace(" not in statement and "@@ plainto_tsquery('english', %s)" in statement
+    assert params == ["apnea-hypopnea index AHI"] * 3 + ["section", 5]
+
+
+def test_hybrid_fuses_the_two_rankings_and_reports_both_ranks(
+    store_with_fake_connection: tuple[LakebaseChunkStore, _Conn],
+) -> None:
+    """Hybrid runs one semantic and one keyword query and returns fused scores with both ranks."""
+    store, conn = store_with_fake_connection
+
+    rows = store.hybrid_search("weight regain", num_results=2)
+
+    assert len(conn.calls) == 2
+    assert [r["id"] for r in rows] == ["PMC1:section:0001", "PMC2:section:0002"]
+    assert rows[0]["vector_rank"] == 1 and rows[0]["text_rank"] == 1 and rows[0]["vector_score"] == 0.9
+    assert rows[0]["score"] == pytest.approx(0.5 / 61 + 0.5 / 61, abs=1e-6)

@@ -21,7 +21,8 @@
 # MAGIC |---|---|---|
 # MAGIC | `semantic` | cosine similarity of GTE Large vectors | the query is embedded by the service that embedded the chunks |
 # MAGIC | `semantic+filter` | the same, after SQL predicates on therapy / trial / year | the lecture's "put the constraint in the filter, not in the query" |
-# MAGIC | `keyword` | PostgreSQL full-text rank (`ts_rank_cd`, `websearch_to_tsquery`) | the keyword-only view; empty when no term matches |
+# MAGIC | `keyword` | PostgreSQL full text: any stemmed term matches, chunks matching every term first, then `ts_rank_cd` | the keyword-only view that AI Search calls FULL_TEXT |
+# MAGIC | `keyword all-terms` | the same with every term required (`plainto_tsquery`, the first run's `websearch_to_tsquery` behaviour) | kept for comparison: it returned nothing for half of the questions |
 # MAGIC | `hybrid` | reciprocal rank fusion of the semantic and keyword rankings | the fusion AI Search describes for its HYBRID mode |
 # MAGIC
 # MAGIC Every mode runs on the `section` chunks (the alternative strategy); `semantic` also runs on the
@@ -46,6 +47,7 @@ if str(ROOT / "src") not in sys.path:
 
 from arxiv_curator.config import load_config  # noqa: E402
 from evidence_curator.chunking import BASELINE, SECTIONS  # noqa: E402
+from evidence_curator.reporting import preserve_observations  # noqa: E402
 from evidence_curator.vector_store import LakebaseChunkStore, SearchFilters  # noqa: E402
 
 cfg = load_config("project_config.yml", env="dev")
@@ -152,6 +154,12 @@ for q in QUESTIONS:
         ("semantic (section)", SearchFilters(strategy=SECTIONS), store.search, {"query_vector": vector}),
         ("semantic (element)", SearchFilters(strategy=BASELINE), store.search, {"query_vector": vector}),
         ("keyword (section)", SearchFilters(strategy=SECTIONS), store.keyword_search, {}),
+        (
+            "keyword all-terms (section)",
+            SearchFilters(strategy=SECTIONS),
+            store.keyword_search,
+            {"require_all_terms": True},
+        ),
         ("hybrid (section)", SearchFilters(strategy=SECTIONS), store.hybrid_search, {"query_vector": vector}),
     ]
     for key in ("filters", "filters_alt"):
@@ -270,11 +278,11 @@ for q in QUESTIONS:
                 f"{row['text'][:140].replace('|', '/').replace(chr(10), ' ')}… |"
             )
         lines.append("")
-lines += [
-    "## Observations",
-    "",
+LOG = ROOT / "docs" / "retrieval_log.md"
+observations = preserve_observations(
+    LOG,
     "_Filled in after the run: where hybrid beat semantic (and vice versa), what the filters changed, how the two chunkings differed, and what the out-of-corpus question returned._",
-    "",
-]
-(ROOT / "docs" / "retrieval_log.md").write_text("\n".join(lines) + "\n")
+)
+lines += ["## Observations", "", observations, ""]
+LOG.write_text("\n".join(lines) + "\n")
 print(f"wrote {ROOT / 'docs' / 'retrieval_log.md'}")

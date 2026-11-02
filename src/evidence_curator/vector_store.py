@@ -431,24 +431,42 @@ class LakebaseChunkStore:
             return self._rows(conn, statement, [vector, *params, vector, num_results])
 
     def keyword_search(
-        self, query: str, num_results: int = 5, filters: SearchFilters | None = None
+        self,
+        query: str,
+        num_results: int = 5,
+        filters: SearchFilters | None = None,
+        require_all_terms: bool = False,
     ) -> list[dict[str, Any]]:
-        """Full-text search alone: PostgreSQL `websearch_to_tsquery` over title and text, ranked by `ts_rank_cd`.
+        """Full-text search alone: PostgreSQL full text over title and chunk text, ranked by `ts_rank_cd`.
 
         The keyword-only view that AI Search calls `FULL_TEXT`; useful on its own to see what exact
         terms (acronyms, trial names, doses) retrieve that semantic similarity misses.
+
+        By default a chunk qualifies when it matches *any* stemmed term of the question, chunks that
+        match *every* term rank first, and `ts_rank_cd` (cover density) orders the rest. The first
+        experiment ran with `websearch_to_tsquery`, which requires every term: half of the eight
+        questions returned no rows at all, and hybrid search degenerated to semantic on them.
+        `require_all_terms=True` keeps that behaviour for comparison. Postgres ranking has no IDF, so a
+        common word weighs as much as a trial name; `all_terms` in the result row says which rows matched
+        the whole question.
         """
         filters = filters or SearchFilters()
         clauses, params = filter_clauses(filters)
-        tsquery = sql.SQL("websearch_to_tsquery('english', %s)")
-        clauses.insert(0, sql.SQL("{} @@ {}").format(self.document_tsvector, tsquery))
+        all_terms = sql.SQL("plainto_tsquery('english', %s)")
+        any_term = sql.SQL("replace(plainto_tsquery('english', %s)::text, ' & ', ' | ')::tsquery")
+        match = all_terms if require_all_terms else any_term
+        clauses.insert(0, sql.SQL("{} @@ {}").format(self.document_tsvector, match))
         statement = (
-            self._select(sql.SQL("ts_rank_cd({}, {}) AS score").format(self.document_tsvector, tsquery))
+            self._select(
+                sql.SQL("ts_rank_cd({tsv}, {rank_q}) AS score, ({tsv} @@ {all_q}) AS all_terms").format(
+                    tsv=self.document_tsvector, rank_q=match, all_q=all_terms
+                )
+            )
             + self._where(clauses)
-            + sql.SQL(" ORDER BY score DESC, c.id LIMIT %s")
+            + sql.SQL(" ORDER BY all_terms DESC, score DESC, c.id LIMIT %s")
         )
         with self.connect() as conn:
-            return self._rows(conn, statement, [query, query, *params, num_results])
+            return self._rows(conn, statement, [query, query, query, *params, num_results])
 
     def hybrid_search(
         self,

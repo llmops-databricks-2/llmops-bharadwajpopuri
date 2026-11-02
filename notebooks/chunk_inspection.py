@@ -52,6 +52,7 @@ from evidence_curator.chunking import (  # noqa: E402
     parse_elements,
 )
 from evidence_curator.gateway import count_tokens, gateway_client  # noqa: E402
+from evidence_curator.reporting import preserve_observations  # noqa: E402
 
 cfg = load_config("project_config.yml", env="dev")
 schema_name = cfg.full_schema_name
@@ -349,9 +350,14 @@ report.append(
 
 # COMMAND ----------
 
+REPORT = ROOT / "docs" / "chunking_report.md"
 report.append("## Observations\n")
 report.append(
-    "_Filled in after the run: what the side-by-side showed, which defects the alternative removed, which it introduced, and the strategy chosen for retrieval._\n"
+    preserve_observations(
+        REPORT,
+        "_Filled in after the run: what the side-by-side showed, which defects the alternative removed, which it introduced, and the strategy chosen for retrieval._",
+    )
+    + "\n"
 )
-(ROOT / "docs" / "chunking_report.md").write_text("\n".join(report) + "\n")
+REPORT.write_text("\n".join(report) + "\n")
 print(f"wrote {ROOT / 'docs' / 'chunking_report.md'} and {ROOT / 'docs' / 'corpus.md'}")

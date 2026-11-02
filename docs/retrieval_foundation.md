@@ -68,6 +68,7 @@ re-sync is one task run.
 | Token budget | 1,500 characters ≈ 375 tokens by the four-characters rule; GTE Large's window is 8,192 tokens | The window is not the binding constraint; retrieval precision is. The model's own counts for a sample, and a probe of the window, are in `chunking_report.md`. |
 | Synced table | TRIGGERED, primary key `id`, `type_overrides` embedding → `PG_SPECIFIC_TYPE_VECTOR` size 1024, `create_database_objects_if_missing`, pipeline storage in the student schema | Without the override the array arrives as JSONB and vector operators do not apply; triggered because the corpus changes when the job runs, not continuously. |
 | Indexes | GIN on `to_tsvector('english', title ‖ text)`; HNSW `vector_cosine_ops` on `embedding` | The course leaves HNSW out because its optional Lakebase Search example puts a `lakebase_ann` index on the same column; that Beta route (`ai_search()` over Lakebase) is not used here, so the pgvector index is created. On a few thousand rows an exact scan is fast anyway. |
+| Keyword matching | Any stemmed term of the question matches; chunks matching every term rank first, then `ts_rank_cd` cover density (`require_all_terms=True` keeps the first run's behaviour) | The first run used `websearch_to_tsquery`, which ANDs every term: four of the eight questions returned no rows and hybrid degenerated to semantic on them. Postgres ranking has no IDF (a trial name weighs no more than "participants"), hence the all-terms-first ordering; BM25 would need an extension or AI Search. |
 | Hybrid scoring | Reciprocal rank fusion of the semantic and full-text rankings (k = 60, top-50 candidates each) | The fusion AI Search describes for HYBRID; it combines ranks, so cosine similarity (0–1) and `ts_rank_cd` (unbounded, usually small) never share a scale. The course's hybrid SQL uses a weighted sum of the raw scores, which is harder to tune; the two agree on the top results more often than not. |
 | `ai_search()` over Lakebase | Not used | Beta; the lecture reported workspace errors on this path and does not rely on it for the agent. Direct Postgres is the recommended route. |
 
@@ -96,10 +97,14 @@ short-lived token minted by the SDK; nothing is copied into code or output.
   individually; an inside-window and a beyond-window probe (`chunking_report.md`).
 - **Retrieval.** The same eight questions through every mode, hit@5 against the trial each
   question is about, latency per call, and the overlap between modes (`retrieval_log.md`).
-- **Where the record is.** The dev run of 2026-10-31 is job run 427363127837771; the CLI output of
-  each step and the tasks' exit summaries were captured but are kept out of git (`docs/evidence/` is
-  ignored, at the reviewers' request), so the numbers in this document and the two reports are the
-  record.
+- **Where the record is.** The dev run of 2026-10-31 is job run 427363127837771 in the course's
+  first workspace; the CLI output of each step and the tasks' exit summaries were captured but are
+  kept out of git (`docs/evidence/` is ignored, at the reviewers' request), so the numbers in this
+  document and the two reports are the record. On 2026-11-03 the course moved to a new workspace:
+  the teachers copied the tables and the volume files under the same names, the synced table was
+  re-created there by running the sync task alone (`databricks bundle run prepare_papers -t dev
+  --only sync_paper_chunks`, no re-parsing and no re-embedding), and `retrieval_log.md` was
+  regenerated against it.
 
 ## Known limitations
 
@@ -109,6 +114,7 @@ short-lived token minted by the SDK; nothing is copied into code or output.
 - The section heuristics (caption detection, the skip list) are tuned on this corpus and inspected
   by hand, not evaluated against labels; the inspection notebook is where they get checked after
   a corpus change.
+- Cosine similarity does not separate "answered" from "not in the corpus" (the out-of-corpus question scored 0.823, above several correct answers); the agent needs an entity check (trial name, NCT ID) and the keyword channel's emptiness as signals of absence, not a score threshold.
 - The hit@5 labels are the trial each question targets, not a reviewed golden set; the golden set of
   ~20 questions with expected passages is the evaluation lecture's work.
 - Pivotal results of the three programmes are largely paywalled (NEJM, Lancet); the corpus leans
@@ -126,4 +132,10 @@ short-lived token minted by the SDK; nothing is copied into code or output.
 
 ## Observations
 
-_Filled in after the runs, from `chunking_report.md` and `retrieval_log.md`._
+The two reports hold the detail; the summary, from the run of 2026-10-31:
+
+- **Parsing and chunking.** `ai_parse_document` returns mostly page furniture; text elements are about a third of the elements. The course baseline (one chunk per text element) inherits the parser's paragraph sizes, 1–7,261 characters: a quarter of its 1,044 chunks are fragments under 50 tokens, 37 are duplicates, reference lists and running headers are indexed, tables are not, and the longest element counted 2,255 tokens by the model. The section strategy holds 11–1,509 characters (p95 368 tokens), drops references and furniture, keeps 132 tables with their captions, and labels every chunk with its section; it still has defects the side-by-side exposed (front-matter boxes parsed as tables, affiliation footnotes treated as body text, Nature-style captions not recognised, hyphenation without a line break left unrepaired, occasional wrong section labels from the parser's reading order). It is the strategy retrieval uses; the baseline stays in the table for comparison.
+- **Embedding window.** GTE Large through the gateway accepts 8,192 tokens and silently truncates beyond it (an 81k-character probe returned a vector with `prompt_tokens = 8192`, no error); the model counts a median 3.6 characters per token here, so the four-characters rule under-estimates by ~10%. The length check lives in the pipeline.
+- **Gateway rate limit.** The first `process_papers` run failed with `REQUEST_LIMIT_EXCEEDED` (tokens per minute, per user); with wait-and-retry the 491,842 tokens took 67 calls and 115 s, 60 s of it waiting. Re-embedding is a paced batch job.
+- **Lakebase.** The synced table came online with 2,141 rows, `embedding` as `vector(1024)`, no nulls, HNSW and GIN indexes beside the primary key, pgvector 0.8.0; one job run creates or updates it and verifies the destination.
+- **Retrieval.** Semantic search on section chunks hit 7/7 answerable questions (baseline chunks 6/7, with reference entries and author lines in its top results); filters narrowed the evidence exactly as intended; the keyword channel with every term required returned nothing for half of the questions, so it was changed to any-term matching with all-terms first; hybrid (RRF) equalled semantic on hits and promoted evidence neither channel ranked first where both matched, at twice the latency; the out-of-corpus question scored 0.823, higher than several correct answers, so a score threshold cannot detect absence and the agent will check for the named trial instead.
