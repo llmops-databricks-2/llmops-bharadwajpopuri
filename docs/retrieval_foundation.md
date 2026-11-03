@@ -35,9 +35,13 @@ experiments, run from VS Code against the same tables.
 ## Configuration approach
 
 Everything environment-specific comes from `project_config.yml` through the course's
-`ProjectConfig`: catalog, schema, volume, the embedding model service, the warehouse, and (added this
+`ProjectConfig`: catalog, schema, volume, the embedding names, the warehouse, and (added this
 week, read from the file the onboarding filled in) the Lakebase project `lakebase_instance` and the
-`usage_policy_id`. No notebook names a resource of its own; the same code deploys to `dev`, `acc`
+`usage_policy_id`. Since the workspace move of November 2026 the configuration carries two embedding
+names for the same GTE Large model (README, "Models"): `embedding_service` is the gateway model
+service and is what every OpenAI-client call in this project passes (`embed_texts`, `embed_query`,
+the token counts); `embedding_endpoint` is the serving endpoint for `ai_query`, AI Search and an
+agent's `DatabricksServingEndpoint` resource, which the gateway client refuses. No notebook names a resource of its own; the same code deploys to `dev`, `acc`
 and `prd` by target, as the lecture asks ("use the configured environment rather than copying a
 developer's resource names into a notebook").
 
@@ -55,7 +59,7 @@ re-sync is one task run.
 | Decision | Choice | Why, and what it costs |
 |---|---|---|
 | Serving store | Lakebase pgvector synced table, not an AI Search index | No Vector Search endpoint is provisioned for students; an endpoint is always-on compute (the lecture put it at ~$250–300 a month) while Lakebase scales to zero; SQL gives metadata predicates, hybrid scoring and reranking under the application's control. Cost: the application embeds its own queries and owns index creation. |
-| Embedding path | `course_ops.gateway.embed` (GTE Large) through Unity Gateway, from Python in batches | The repository README says to generate vectors through the gateway's embeddings API before storing them in pgvector; usage lands in `system.ai_gateway.usage` against the student budget; the gateway reports the model's own token count per call. The course switched its arXiv pipeline to `databricks-gte-large-en` via `ai_query` because AI Search cannot call the gateway, a constraint the Lakebase route does not have. Risk: if the gateway service were replaced, every vector must be regenerated with whatever replaces it (true of any model change). |
+| Embedding path | `embedding_service` (`course_ops.gateway.embed`, GTE Large) through Unity Gateway, from Python in batches | The repository README says to generate vectors through the gateway's embeddings API before storing them in pgvector; usage lands in `system.ai_gateway.usage` against the student budget; the gateway reports the model's own token count per call. The course switched its arXiv pipeline to `databricks-gte-large-en` via `ai_query` because AI Search cannot call the gateway, a constraint the Lakebase route does not have. Risk: if the gateway service were replaced, every vector must be regenerated with whatever replaces it (true of any model change). |
 | Rate limits | Wait-and-retry on the gateway's per-user tokens-per-minute limit (15 s doubling to 60 s, batch halved after three consecutive 429s), hits and waiting time recorded in the task summary | The first dev run of `process_papers` failed with `REQUEST_LIMIT_EXCEEDED` on `course_ops.gateway.embed` after a burst of 32-text batches; the OpenAI client's own two quick retries cannot out-wait a per-minute limiter. Batch ingestion through a shared, budgeted service is throughput-bound, which is the operational point the lecture made about embedding choice; the recorded waits quantify it. |
 | Corpus | Papers the registry itself links to the pinned trials, resolved to the PMC Open Access Subset | Every paper is tied to a trial by ClinicalTrials.gov, which is the paper-to-trial mapping the proposal needed; no free-text search, so the set is reproducible. The PMC OA web service was discontinued in 2026; membership, licence and PDFs now come from NCBI's PMC Article Datasets on AWS (world-readable, plain HTTPS, MD5 per file), the route NCBI documents for automated retrieval. |
 | Licence policy | Any Creative Commons licence (CC BY, CC BY-NC, CC BY-NC-ND, …), recorded per paper; `TDM`-only author manuscripts and unlicensed items excluded | On 2026-10-22: 123 PMIDs → 73 in PMC → 54 open access with a CC licence and a PDF (21 CC BY, 15 CC BY-NC, 22 CC BY-NC-ND; the other 19: 8 absent from the datasets, 4 without a PDF, 3 without a licence code, 4 text-mining-only manuscripts). Restricting to CC BY would leave liraglutide with two papers (its SCALE result papers are CC BY-NC-ND). The project is non-commercial coursework and briefs cite rather than reproduce; `use_case.md` was updated accordingly. |

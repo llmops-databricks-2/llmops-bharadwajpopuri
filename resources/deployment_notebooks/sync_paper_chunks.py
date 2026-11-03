@@ -58,7 +58,10 @@ assert source.filter("id IS NULL").count() == 0, "null ids"
 assert source.select("id").distinct().count() == n_source, "ids are not unique: the primary key would be ambiguous"
 assert source.filter("embedding IS NULL OR size(embedding) <> 1024").count() == 0, "rows without a 1,024-d vector"
 properties = {r["key"]: r["value"] for r in spark.sql(f"SHOW TBLPROPERTIES {store.source_table_full_name}").collect()}
-assert properties.get("delta.enableChangeDataFeed") == "true", "Change Data Feed is off: the triggered sync needs it"
+if properties.get("delta.enableChangeDataFeed") != "true":
+    # A table copied between workspaces can arrive without the property; the sync pipeline reads the feed.
+    spark.sql(f"ALTER TABLE {store.source_table_full_name} SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')")
+    print("Change Data Feed was off on the source table: enabled it")
 print(f"source OK: {n_source} rows, unique ids, vectors present, Change Data Feed on")
 
 # COMMAND ----------

@@ -14,7 +14,7 @@
 # MAGIC |---|---|---|
 # MAGIC | Parse | `ai_parse_document` on the volume's PDFs, result stored as a JSON string in `parsed_papers`; only files not parsed before (parsing is billed per page) | `DataProcessor.parse_pdfs_with_ai` |
 # MAGIC | Chunk | two strategies side by side, `element` (the course's one chunk per text element) and `section` (section-aware packing with sentence overlap, tables kept, reference lists dropped) | `DataProcessor._extract_chunks` / `_clean_chunk` |
-# MAGIC | Embed | `course_ops.gateway.embed` (GTE Large, 1,024 dimensions) through Unity Gateway, in batches, with the gateway's token usage recorded | `ai_query(embedding_endpoint, text)` |
+# MAGIC | Embed | `embedding_service` (`course_ops.gateway.embed`: GTE Large, 1,024 dimensions) through Unity Gateway, in batches, with the gateway's token usage recorded | `ai_query(embedding_endpoint, text)` |
 # MAGIC | Store | `paper_chunks`, one row per chunk with its provenance (paper, section, page, element ids) and the paper's metadata for filtering, Change Data Feed on | `arxiv_chunks_table` |
 # MAGIC
 # MAGIC Both strategies land in the one table with a `strategy` column, so the Lakebase copy can serve
@@ -48,7 +48,7 @@ papers_table = f"{schema_name}.papers"
 parsed_table = f"{schema_name}.parsed_papers"
 chunks_table = f"{schema_name}.paper_chunks"
 processed = int(time.strftime("%Y%m%d%H%M", time.gmtime()))
-print(f"Configuration loaded for {schema_name}; strategies {strategies}; embedding service {cfg.embedding_endpoint}")
+print(f"Configuration loaded for {schema_name}; strategies {strategies}; embedding service {cfg.embedding_service}")
 
 spark = SparkSession.builder.getOrCreate()
 
@@ -171,7 +171,7 @@ for strategy in strategies:
 client = gateway_client(WorkspaceClient())
 started = time.perf_counter()
 vectors, usage = embed_texts(
-    client, cfg.embedding_endpoint, [r["text"] for r in chunk_rows], batch_size=32, log_every=10
+    client, cfg.embedding_service, [r["text"] for r in chunk_rows], batch_size=32, log_every=10
 )
 print(
     f"embedded {usage.n_texts} chunks in {usage.n_calls} calls, {usage.prompt_tokens} prompt tokens, "
@@ -182,7 +182,7 @@ assert usage.dimension == 1024, f"expected 1,024-dimensional vectors, got {usage
 now = datetime.now(UTC)
 for row, vector in zip(chunk_rows, vectors, strict=True):
     row["embedding"] = vector
-    row["embedding_model"] = cfg.embedding_endpoint
+    row["embedding_model"] = cfg.embedding_service
     row["processed"] = now
 
 # COMMAND ----------
@@ -223,7 +223,7 @@ chunks = spark.table(chunks_table)
 n_chunks = chunks.count()
 assert chunks.select("id").distinct().count() == n_chunks, "chunk id is not unique"
 assert chunks.filter("embedding IS NULL OR size(embedding) <> 1024").count() == 0, "a chunk has no 1,024-d embedding"
-assert chunks.filter(f"embedding_model <> '{cfg.embedding_endpoint}'").count() == 0, "mixed embedding models"
+assert chunks.filter(f"embedding_model <> '{cfg.embedding_service}'").count() == 0, "mixed embedding models"
 assert chunks.filter("pmcid IS NULL OR text IS NULL OR text = ''").count() == 0, "provenance or text missing"
 assert {r["strategy"] for r in chunks.select("strategy").distinct().collect()} == set(strategies)
 print(f"OK: {n_chunks} chunks from {len(documents)} papers, {len(strategies)} strategies, in {chunks_table}")

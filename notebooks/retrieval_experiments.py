@@ -233,7 +233,7 @@ lines = [
     "# Retrieval log",
     "",
     f"Run at {datetime.now(UTC).isoformat(timespec='seconds')} against `{store.synced_table_id}` "
-    f"(Lakebase project `{cfg.lakebase_instance}`), queries embedded with `{cfg.embedding_endpoint}`. "
+    f"(Lakebase project `{cfg.lakebase_instance}`), queries embedded with `{cfg.embedding_service}`. "
     f"Top-{K} per mode; a *hit* is a result whose paper is linked by the registry to one of the question's expected trials.",
     "",
     "## Questions",

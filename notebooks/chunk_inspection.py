@@ -63,7 +63,7 @@ else:  # VS Code: Databricks Connect on serverless, authenticated by the OAuth p
     spark = DatabricksSession.builder.serverless(True, usage_policy_id=cfg.usage_policy_id).getOrCreate()
 w = WorkspaceClient()
 client = gateway_client(w)
-print(f"{schema_name} as {w.current_user.me().user_name}; embedding service {cfg.embedding_endpoint}")
+print(f"{schema_name} as {w.current_user.me().user_name}; embedding service {cfg.embedding_service}")
 
 GTE_WINDOW = 8192  # tokens, databricks-gte-large-en (lecture table); verified below
 report: list[str] = [
@@ -283,7 +283,7 @@ for strategy in (BASELINE, SECTIONS):
     )
     for idx in dict.fromkeys(picks):
         row = chunks.loc[idx]
-        actual = count_tokens(client, cfg.embedding_endpoint, row.text)
+        actual = count_tokens(client, cfg.embedding_service, row.text)
         sample_rows.append(
             {
                 "strategy": strategy,
@@ -297,7 +297,7 @@ ratios = [r["n_chars"] / r["actual"] for r in sample_rows if r["actual"]]
 worst = max(sample_rows, key=lambda r: r["actual"] or 0)
 report.append("## Token counts from the embedding model\n")
 report.append(
-    f"{len(sample_rows)} chunks embedded one at a time through `{cfg.embedding_endpoint}`: characters per model token "
+    f"{len(sample_rows)} chunks embedded one at a time through `{cfg.embedding_service}`: characters per model token "
     f"min {min(ratios):.2f}, median {sorted(ratios)[len(ratios) // 2]:.2f}, max {max(ratios):.2f} (the planning rule assumes 4). "
     f"Largest sampled chunk: {worst['actual']} tokens ({worst['n_chars']} chars, `{worst['id']}`).\n"
 )
@@ -320,7 +320,7 @@ for label, text in probes.items():
         probe_results[label] = {
             "chars": len(text),
             "estimate": estimate_tokens(text),
-            "model_tokens": count_tokens(client, cfg.embedding_endpoint, text),
+            "model_tokens": count_tokens(client, cfg.embedding_service, text),
             "error": None,
         }
     except Exception as error:  # the service's answer is the finding, whichever it is

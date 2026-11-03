@@ -383,8 +383,12 @@ class LakebaseChunkStore:
         return self._embedding_client
 
     def embed_query(self, query: str) -> list[float]:
-        """Embed a question with `cfg.embedding_endpoint`, the service that embedded the chunks."""
-        response = create_embeddings(self.embedding_client, self.cfg.embedding_endpoint, [query])
+        """Embed a question with `cfg.embedding_service`, the gateway service that embedded the chunks.
+
+        The gateway client takes the model service name; `cfg.embedding_endpoint` is the serving
+        endpoint of the same model, for `ai_query` and agent resources, and the gateway refuses it.
+        """
+        response = create_embeddings(self.embedding_client, self.cfg.embedding_service, [query])
         return list(response.data[0].embedding)
 
     def _select(self, extra: sql.Composable) -> sql.Composed:
