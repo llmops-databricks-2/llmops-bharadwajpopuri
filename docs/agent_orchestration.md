@@ -79,7 +79,7 @@ sponsor; call both when a question mixes design and results; call `resolve_thera
 user names a brand or code. When returned passages do not mention the trial or therapy the user
 asked about, say the corpus does not cover it and name what it does cover — that is the lecture-2
 lesson that cosine scores are not an evidence threshold (in the lecture-2 log the out-of-corpus OASIS 1
-question's top chunk scored 0.823 while the correct top chunks for Q2, Q3 and Q6 scored 0.76–0.79).
+question's top chunk scored 0.823 while the correct top chunks for Q2, Q3 and Q6 scored 0.75–0.76).
 
 ## Stopping conditions and failure paths
 
@@ -133,7 +133,8 @@ Three decisions:
 
 | Resource | Interactive dev (this PR's evidence) | Deployed (lecture 4) |
 | --- | --- | --- |
-| Chat model `course_ops.gateway.chat` | User OAuth through the Unity Gateway | SPN with gateway access |
+| Chat model `llm_endpoint` (`course_ops.gateway.chat`) | User OAuth through the Unity Gateway | SPN with gateway access |
+| Query embedding in `search_papers`: `embedding_service` (`course_ops.gateway.embed`), the route that embedded the chunks | User OAuth through the Unity Gateway | SPN with gateway access. Which name a deployed agent declares for it (`embedding_endpoint`, the serving endpoint the README reserves for agent resources, or the gateway service) is settled in lecture 4 |
 | `search_papers` → Lakebase `paper_chunks_synced` | User's Lakebase credential (`generate_database_credential`), Postgres role = user | SPN credential from `LAKEBASE_SP_*` secrets; SPN role granted `SELECT` on the chunks table |
 | `query_trials` → Genie space + warehouse + UC tables | User: `CAN_RUN` on the space, `CAN_USE` on the warehouse, `SELECT` on the three tables | SPN with the same three grants, explicitly: seeing the space in the UI proves nothing about the job identity |
 | `session_messages` | User role: `CREATE` for the one-time schema step, then `SELECT`/`INSERT` | SPN role: `SELECT`/`INSERT` only; the table is created beforehand, not by the serving identity |
@@ -166,4 +167,4 @@ time — direct SQL first, then the tool, then the agent.
 | `resources/genie_space.yml` | `evidence-curator-space` over `trials`, `trial_references`, `drug_aliases` with column descriptions and example SQL |
 | `resources/agent.job.yml` | Job running `notebooks/agent_experiments.py` (the verification set) with the space ID as a parameter |
 | `tests/test_tools.py`, `tests/test_agent.py` | Callables tested directly; the loop tested against a stub model that scripts tool calls, errors and the budget |
-| `docs/agent_log.md`, `docs/evidence/` | Test-run output: tool selection, successful result, controlled failure, memory isolation |
+| `docs/agent_log.md` | Test-run output: tool selection, successful result, controlled failure, memory isolation (console captures stay local; `docs/evidence/` is gitignored since the lecture-2 review) |
