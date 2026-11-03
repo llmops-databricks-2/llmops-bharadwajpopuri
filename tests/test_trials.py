@@ -1,13 +1,12 @@
-"""Tests for the ClinicalTrials.gov ingestion: recorded API responses in, table rows out.
+"""Tests for the ClinicalTrials.gov ingestion: API study records in, table rows out.
 
-No network: `tests/fixtures/ctgov_two_studies.json` is a trimmed API v2 response for STEP 1 and
-SURMOUNT-1 recorded on 2026-10-14. Fetching is covered by the job run, not by unit tests.
+No network: the two study records below are hand-built in the shape of the API v2 response, with the
+registry's values for SURMOUNT-1 and STEP 1 as of 2026-10-14, reduced to the fields the flattening
+reads. Fetching is covered by the job run, not by unit tests.
 """
 
-import json
 import re
 from datetime import UTC, datetime
-from pathlib import Path
 
 import pytest
 
@@ -26,14 +25,101 @@ from evidence_curator.trials import (
     study_references,
 )
 
-FIXTURE = Path(__file__).parent / "fixtures" / "ctgov_two_studies.json"
 RETRIEVED = datetime(2026, 10, 14, 12, 0, tzinfo=UTC)
+
+
+def _study(
+    nct_id: str,
+    acronym: str,
+    title: str,
+    sponsor: str,
+    enrollment: int,
+    dates: tuple[str, str, str],
+    conditions: list[str],
+    interventions: list[dict],
+    primary_outcomes: list[tuple[str, str]],
+    references: list[tuple[str, str]],
+) -> dict:
+    """Build one study record in the shape of `GET /api/v2/studies`, with the modules the ingestion stores."""
+    start, primary_completion, completion = dates
+    return {
+        "protocolSection": {
+            "identificationModule": {"nctId": nct_id, "acronym": acronym, "briefTitle": title, "officialTitle": title},
+            "statusModule": {
+                "overallStatus": "COMPLETED",
+                "startDateStruct": {"date": start, "type": "ACTUAL"},
+                "primaryCompletionDateStruct": {"date": primary_completion, "type": "ACTUAL"},
+                "completionDateStruct": {"date": completion, "type": "ACTUAL"},
+            },
+            "sponsorCollaboratorsModule": {"leadSponsor": {"name": sponsor, "class": "INDUSTRY"}},
+            "conditionsModule": {"conditions": conditions},
+            "designModule": {
+                "studyType": "INTERVENTIONAL",
+                "phases": ["PHASE3"],
+                "designInfo": {
+                    "allocation": "RANDOMIZED",
+                    "interventionModel": "PARALLEL",
+                    "primaryPurpose": "TREATMENT",
+                    "maskingInfo": {"masking": "DOUBLE"},
+                },
+                "enrollmentInfo": {"count": enrollment, "type": "ACTUAL"},
+            },
+            "armsInterventionsModule": {"interventions": interventions},
+            "outcomesModule": {
+                "primaryOutcomes": [{"measure": measure, "timeFrame": frame} for measure, frame in primary_outcomes]
+            },
+            "eligibilityModule": {
+                "sex": "ALL",
+                "minimumAge": "18 Years",
+                "eligibilityCriteria": "Inclusion Criteria: ...",
+            },
+            "referencesModule": {
+                "references": [
+                    {"pmid": pmid, "type": kind, "citation": f"Citation for PMID {pmid}."} for pmid, kind in references
+                ]
+            },
+        },
+        "hasResults": True,
+    }
+
+
+SURMOUNT_1 = _study(
+    "NCT04184622",
+    "SURMOUNT-1",
+    "A Study of Tirzepatide (LY3298176) in Participants With Obesity or Overweight",
+    "Eli Lilly and Company",
+    2539,
+    ("2019-12-04", "2022-04-01", "2024-07-06"),
+    ["Overweight", "Obesity"],
+    [{"type": "DRUG", "name": "Tirzepatide", "otherNames": ["LY3298176"]}, {"type": "DRUG", "name": "Placebo"}],
+    [
+        ("Percent Change From Baseline in Body Weight (Primary Treatment Period)", "Baseline, Week 72"),
+        ("Percentage of Participants Who Achieve ≥5% Body Weight Reduction (Primary Treatment Period)", "Week 72"),
+    ],
+    [("42831032", "DERIVED"), ("42348366", "DERIVED"), ("42233927", "DERIVED")],
+)
+
+STEP_1 = _study(
+    "NCT03548935",
+    "STEP 1",
+    "STEP 1: Research Study Investigating How Well Semaglutide Works in People Suffering From Overweight or Obesity",
+    "Novo Nordisk A/S",
+    1961,
+    ("2018-06-04", "2020-03-30", "2021-03-05"),
+    ["Metabolism and Nutrition Disorder", "Overweight or Obesity"],
+    [{"type": "DRUG", "name": "Semaglutide"}, {"type": "DRUG", "name": "Placebo (semaglutide)"}],
+    [
+        ("Change in Body Weight (%)", "Baseline (week 0) to week 68"),
+        ("Participants Who Achieve 5 or More Percent Body Weight Reduction (Yes/no)", "After week 68"),
+    ],
+    [("32441473", "BACKGROUND"), ("33567185", "RESULT"), ("40980163", "DERIVED")],
+)
 
 
 @pytest.fixture
 def studies() -> list[dict]:
-    """Load the two recorded studies."""
-    return json.loads(FIXTURE.read_text())["studies"]
+    """Return the two study records in the order the API returned them."""
+    return [SURMOUNT_1, STEP_1]
 
 
 def test_seed_ids_are_unique_and_well_formed() -> None:

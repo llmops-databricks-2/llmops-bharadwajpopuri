@@ -11,13 +11,15 @@ fresh headers on every request, so OAuth tokens are refreshed rather than copied
 """
 
 import time
-from collections.abc import Iterator
+from collections import deque
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 from typing import Any
 
 import httpx
 from databricks.sdk import WorkspaceClient
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
+from openai.types import CreateEmbeddingResponse
 
 GATEWAY_PATH = "/ai-gateway/mlflow/v1"
 
@@ -131,3 +133,146 @@ def chat(
         reasoning=reasoning,
         raw_usage=usage.model_dump() if usage is not None else {},
     )
+
+
+@dataclass
+class EmbeddingUsage:
+    """What the embedding step records: calls, tokens, seconds, and how much the gateway's rate limit cost."""
+
+    model: str
+    n_texts: int = 0
+    n_calls: int = 0
+    prompt_tokens: int = 0
+    latency_s: float = 0.0
+    dimension: int | None = None
+    rate_limit_hits: int = 0  # 429 responses from the gateway
+    rate_limit_wait_s: float = 0.0  # time spent waiting for the per-minute window to reopen
+    batch_splits: int = 0  # batches halved because they exceeded the per-minute budget on their own
+
+    def add(self, n_texts: int, prompt_tokens: int | None, latency_s: float, dimension: int | None) -> None:
+        """Accumulate one call's accounting."""
+        self.n_texts += n_texts
+        self.n_calls += 1
+        self.prompt_tokens += prompt_tokens or 0
+        self.latency_s = round(self.latency_s + latency_s, 2)
+        self.dimension = self.dimension or dimension
+
+
+# The course's model services carry a tokens-per-minute limit per user. A limiter measured by the
+# minute cannot be out-waited by the OpenAI client's own retries (a few seconds), so 429s are handled
+# here: wait, retry the same batch, and halve a batch that keeps failing because it alone is over budget.
+RATE_LIMIT_FIRST_WAIT_S = 15.0
+RATE_LIMIT_MAX_WAIT_S = 60.0
+RATE_LIMIT_BUDGET_S = 2700.0  # give up after this much waiting in total (the job's timeout is longer)
+SPLIT_AFTER_HITS = 3
+
+
+def _next_wait(previous: float) -> float:
+    return min(previous * 2, RATE_LIMIT_MAX_WAIT_S)
+
+
+def create_embeddings(
+    client: OpenAI,
+    model: str,
+    inputs: Sequence[str],
+    usage: EmbeddingUsage | None = None,
+    max_wait_s: float = RATE_LIMIT_BUDGET_S,
+) -> CreateEmbeddingResponse:
+    """One embeddings call that waits out the gateway's per-minute rate limit instead of failing on it."""
+    usage = usage or EmbeddingUsage(model=model)
+    delay = RATE_LIMIT_FIRST_WAIT_S
+    while True:
+        try:
+            return client.embeddings.create(model=model, input=list(inputs))
+        except RateLimitError:
+            if usage.rate_limit_wait_s + delay > max_wait_s:
+                raise
+            usage.rate_limit_hits += 1
+            usage.rate_limit_wait_s = round(usage.rate_limit_wait_s + delay, 1)
+            time.sleep(delay)
+            delay = _next_wait(delay)
+
+
+def embed_texts(
+    client: OpenAI,
+    model: str,
+    texts: Sequence[str],
+    batch_size: int = 32,
+    max_wait_s: float = RATE_LIMIT_BUDGET_S,
+    pause_s: float = 0.0,
+    log_every: int = 0,
+) -> tuple[list[list[float]], EmbeddingUsage]:
+    """Embed texts through the gateway's embeddings API in batches; vectors come back in input order.
+
+    The same client and model service must embed the documents and, later, the queries: vectors from
+    different models are not comparable even when their dimension matches. The gateway reports
+    `usage.prompt_tokens` per call, which is the model's own token count of the batch, the number to
+    trust over the four-characters-per-token estimate.
+
+    Rate limits: on a 429 the batch waits (15 s, doubling to 60 s) and is retried; after three
+    consecutive 429s a batch of more than one text is split in two, since it may exceed the
+    per-minute budget by itself. `usage` records the hits, the waiting time and the splits, which
+    is the throughput story the lecture asked to measure for batch ingestion. `pause_s` spaces calls
+    out when the budget is known to be tight; `log_every` prints a progress line every N calls, so a
+    throttled run shows it is alive.
+    """
+    usage = EmbeddingUsage(model=model)
+    vectors: list[list[float] | None] = [None] * len(texts)
+    pending: deque[tuple[int, int]] = deque(
+        (s, min(s + batch_size, len(texts))) for s in range(0, len(texts), batch_size)
+    )
+    delay = RATE_LIMIT_FIRST_WAIT_S
+    hits_in_a_row = 0
+    while pending:
+        start, end = pending[0]
+        batch = list(texts[start:end])
+        began = time.perf_counter()
+        try:
+            response = client.embeddings.create(model=model, input=batch)
+        except RateLimitError:
+            if usage.rate_limit_wait_s + delay > max_wait_s:
+                raise
+            hits_in_a_row += 1
+            usage.rate_limit_hits += 1
+            usage.rate_limit_wait_s = round(usage.rate_limit_wait_s + delay, 1)
+            time.sleep(delay)
+            delay = _next_wait(delay)
+            if hits_in_a_row >= SPLIT_AFTER_HITS and end - start > 1:
+                middle = (start + end) // 2
+                pending.popleft()
+                pending.appendleft((middle, end))
+                pending.appendleft((start, middle))
+                usage.batch_splits += 1
+                hits_in_a_row = 0
+            continue
+        pending.popleft()
+        hits_in_a_row = 0
+        delay = RATE_LIMIT_FIRST_WAIT_S
+        latency = time.perf_counter() - began
+        ordered = sorted(response.data, key=lambda d: d.index)
+        if len(ordered) != len(batch):
+            raise RuntimeError(f"embedding call returned {len(ordered)} vectors for {len(batch)} inputs")
+        for offset, datum in enumerate(ordered):
+            vectors[start + offset] = list(datum.embedding)
+        usage.add(
+            n_texts=len(batch),
+            prompt_tokens=getattr(response.usage, "prompt_tokens", None) if response.usage else None,
+            latency_s=latency,
+            dimension=len(ordered[0].embedding) if ordered else None,
+        )
+        if log_every and usage.n_calls % log_every == 0:
+            print(
+                f"  embedded {usage.n_texts}/{len(texts)} texts in {usage.n_calls} calls, {usage.prompt_tokens} tokens; "
+                f"rate limit: {usage.rate_limit_hits} hits, {usage.rate_limit_wait_s} s waited, {usage.batch_splits} splits"
+            )
+        if pause_s and pending:
+            time.sleep(pause_s)
+    if any(v is None for v in vectors):
+        raise RuntimeError("some texts were not embedded")
+    return [v for v in vectors if v is not None], usage
+
+
+def count_tokens(client: OpenAI, model: str, text: str) -> int | None:
+    """Measure the model's token count of one text by embedding it alone and reading the usage report."""
+    response = create_embeddings(client, model, [text])
+    return getattr(response.usage, "prompt_tokens", None) if response.usage else None
