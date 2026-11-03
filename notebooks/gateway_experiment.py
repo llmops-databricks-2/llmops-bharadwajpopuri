@@ -192,11 +192,20 @@ for r in results:
     if r.reasoning:
         lines += [f"_Reasoning summary returned by the model: {r.reasoning}_", ""]
     lines += [r.content, "", f"Usage detail: `{r.raw_usage}`", ""]
-lines += ["## Limitations observed", "", "_Fill in after the run: see the PR description._", ""]
+# The limitations are written by hand after a run; a rerun keeps them instead of resetting the section.
+LIMITATIONS_HEADING = "## Limitations observed"
+PLACEHOLDER = "_Fill in after the run: see the PR description._"
+docs_dir = ROOT / "docs"
+log_path = docs_dir / "gateway_experiment_log.md"
+limitations = PLACEHOLDER
+if log_path.is_file() and LIMITATIONS_HEADING in log_path.read_text():
+    kept = log_path.read_text().split(LIMITATIONS_HEADING, 1)[1].strip()
+    if kept and not kept.startswith("_Fill in"):
+        limitations = kept
+lines += [LIMITATIONS_HEADING, "", limitations, ""]
 
 log = "\n".join(lines)
 print(log)
-docs_dir = ROOT / "docs"
 if docs_dir.is_dir():
-    (docs_dir / "gateway_experiment_log.md").write_text(log)
-    print(f"Saved to {docs_dir / 'gateway_experiment_log.md'}")
+    log_path.write_text(log)
+    print(f"Saved to {log_path}")
