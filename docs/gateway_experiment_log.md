@@ -1,13 +1,13 @@
 # Gateway experiment log
 
-Run at 2026-10-14T22:15:26+00:00 against `course_ops.gateway.chat` (chat) and `course_ops.gateway.embed` (embeddings) via `https://dbc-88df4c2c-4033.cloud.databricks.com/ai-gateway/mlflow/v1/`.
+Run at 2026-11-03T12:52:48+00:00 against `course_ops.gateway.chat` (chat) and `course_ops.gateway.embed` (embeddings) via `https://dbc-e81ca4d2-f6bd.cloud.databricks.com/ai-gateway/mlflow/v1/`.
 
 | Prompt | Latency (s) | Prompt tokens | Completion tokens | Total | Finish |
 |---|---:|---:|---:|---:|---|
-| summarise_record | 1.62 | 707 | 175 | 882 | stop |
-| compare_two_trials | 3.14 | 719 | 431 | 1150 | stop |
-| results_without_context | 3.8 | 135 | 554 | 689 | stop |
-| alias_resolution | 0.6 | 205 | 27 | 232 | stop |
+| summarise_record | 1.46 | 707 | 181 | 888 | stop |
+| compare_two_trials | 2.09 | 719 | 355 | 1074 | stop |
+| results_without_context | 3.79 | 135 | 757 | 892 | stop |
+| alias_resolution | 0.28 | 205 | 29 | 234 | stop |
 
 Embeddings: 3 inputs, dimension 1024, usage {'prompt_tokens': 94, 'total_tokens': 94}.
 
@@ -15,70 +15,64 @@ Embeddings: 3 inputs, dimension 1024, usage {'prompt_tokens': 94, 'total_tokens'
 
 ### summarise_record
 
-_Reasoning summary returned by the model: We need five lines: population, intervention/comparator, primary endpoint and timeframe, enrollment, status. Cite._
-
 - **Population:** Adults ≥ 18 years with overweight or obesity (no diabetes required) (NCT03548935, minimum_age).
-- **Intervention & Comparator:** Randomized to semaglutide 2.4 mg once‑weekly vs matching placebo (NCT03548935, interventions).
-- **Primary Endpoint & Time Frame:** Percent change in body weight from baseline to week 68 (NCT03548935, primary_outcomes).
-- **Enrollment:** Planned sample size of 1,961 participants (NCT03548935, enrollment_count).
-- **Status:** The trial is COMPLETED (NCT03548935, overall_status).
+- **Intervention & Comparator:** Semaglutide 2.4 mg once‑weekly vs. matching placebo (NCT03548935, interventions).
+- **Primary Endpoint & Time Frame:** Percent change in body weight from baseline to week 68 (and proportion achieving ≥5 % loss) (NCT03548935, primary_outcomes).
+- **Enrollment:** 1,961 participants were planned/ enrolled (NCT03548935, enrollment_count).
+- **Status:** The trial is completed (NCT03548935, overall_status).
 
-Usage detail: `{'completion_tokens': 175, 'prompt_tokens': 707, 'total_tokens': 882, 'completion_tokens_details': None, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 0}, 'cache_read_input_tokens': 0}`
+Usage detail: `{'completion_tokens': 181, 'prompt_tokens': 707, 'total_tokens': 888, 'completion_tokens_details': None, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 0}, 'cache_read_input_tokens': 0}`
 
 ### compare_two_trials
 
-_Reasoning summary returned by the model: We need table side by side. Use fields. Provide sentence about head to head comparability._
-
-**Side‑by‑Side Comparison**
+**Side‑by‑side comparison**
 
 | Characteristic | **NCT03548935 (STEP 1)** | **NCT04184622 (SURMOUNT‑1)** |
 |----------------|---------------------------|------------------------------|
-| **Population age limits** | Minimum 18 years; no upper limit specified (18 Years, minimum_age) | Minimum 18 years; no upper limit specified (18 Years, minimum_age) |
-| **Intervention** | Semaglutide 2.4 mg once‑weekly (DRUG: Semaglutide) (interventions) | Tirzepatide once‑weekly (DRUG: Tirzepatide) (interventions) |
-| **Comparator** | Placebo (DRUG: Placebo (semaglutide)) (interventions) | Placebo (DRUG: Placebo) (interventions) |
-| **Primary endpoint** | Change in body weight % from baseline to week 68; proportion achieving ≥5 % weight loss (primary_outcomes) | Percent change from baseline in body weight at week 72; proportion achieving ≥5 % weight loss at week 72 (primary_outcomes) |
-| **Treatment duration** | 68 weeks (implicit from primary outcome time point) (primary_outcomes) | 72 weeks (implicit from primary outcome time point) (primary_outcomes) |
+| **Population age limits** | Minimum 18 years; no stated maximum (18 Years, minimum_age) | Minimum 18 years; no stated maximum (18 Years, minimum_age) |
+| **Intervention** | Semaglutide 2.4 mg once‑weekly (drug) (interventions) | Tirzepatide once‑weekly (drug) (interventions) |
+| **Comparator** | Placebo (semaglutide) (interventions) | Placebo (interventions) |
+| **Primary endpoint** | Change in body weight % from baseline to week 68; proportion achieving ≥5 % weight loss (primary_outcomes) | Percent change in body weight from baseline to week 72; proportion achieving ≥5 % weight loss (primary_outcomes) |
+| **Treatment duration** | 68 weeks (implied by primary outcome time‑point) (primary_outcomes) | 72 weeks (implied by primary outcome time‑point) (primary_outcomes) |
 | **Enrollment** | 1,961 participants (enrollment_count) | 2,539 participants (enrollment_count) |
 
-**Comparability statement**
-Both trials evaluated a GLP‑1‑based agonist versus placebo in adults with overweight/obesity and used similar weight‑loss primary endpoints, but differences in drug (semaglutide vs tirzepatide), treatment duration (68 weeks vs 72 weeks), and sample size mean the results cannot be directly compared head‑to‑head without indirect‑treatment‑comparison methods.
+**Head‑to‑head comparability**
+Because the two trials used different investigational drugs, slightly different follow‑up periods (68 weeks vs 72 weeks), and were conducted independently, their results cannot be directly compared head‑to‑head.
 
-Usage detail: `{'completion_tokens': 431, 'prompt_tokens': 719, 'total_tokens': 1150, 'completion_tokens_details': None, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 0}, 'cache_read_input_tokens': 0}`
+Usage detail: `{'completion_tokens': 355, 'prompt_tokens': 719, 'total_tokens': 1074, 'completion_tokens_details': None, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 0}, 'cache_read_input_tokens': 0}`
 
 ### results_without_context
 
-_Reasoning summary returned by the model: Need to info: STEP 1 trial (tirzepatide?) weight loss % and journal. SURMOUNT-1 trial (semaglutide weekly) weight loss %. Provide primary endpoints and journals. Cite sources._
+**Weight‑loss outcomes at the primary endpoints**
 
-**STEP 1 Trial (tirzepatide in adults with obesity)**
-| Item | Details |
-|------|---------|
-| **Primary endpoint** | Mean percent change in body weight from baseline to week 72. |
-| **Result reported** | **−22.5 %** weight loss with tirzepatide 15 mg (the highest dose) compared with placebo. |
-| **Journal of publication** | *The New England Journal of Medicine* (NEJM).  <br>Reference: Jastreboff AM, et al. “Tirzepatide Once Weekly for the Treatment of Obesity.” **N Engl J Med**. 2022;387:205‑216. DOI: 10.1056/NEJMoa2206226. |
+| Trial | Drug (dose) | Mean % body‑weight loss at the primary endpoint* | Journal (year) |
+|-------|--------------|--------------------------------------------------|----------------|
+| **STEP 1** (Semaglutide Treatment Effect in People with obesity) | Tirzepatide 15 mg (once‑weekly) | **≈ 15 %** (15.0 % ± 0.4 % in the tirzepid​e group vs 2.4 % ± 0.2 % with placebo) | *The New England Journal of Medicine* – 2023 (Ludwig et al.) |
+| **SURMOUNT‑1** (Semaglutide Treatment in the Management of Obesity) | Semaglutide 2.4 mg (once‑weekly) | **≈ 14.9 %** (14.9 % ± 0.2 % in the semaglutide group vs 2.4 % ± 0.2 % with placebo) | *The New England Journal of Medicine* – 2021 (Wilding et al.) |
 
-**SURMOUNT‑1 Trial (semaglutide 2.4 mg for weight management)**
-| Item | Details |
-|------|---------|
-| **Primary endpoint** | Percent change in body weight from baseline to week 68. |
-| **Result reported** | **−14.9 %** weight loss with semaglutide 2.4 mg versus placebo. |
-| **Journal of publication** | *The New England Journal of Medicine* (NEJM).  <br>Reference: Wilding JPH, et al. “Once‑Weekly Semaglutide in Adults with Overweight or Obesity.” **N Engl J Med**. 2021;384:989‑1002. DOI: 10.1056/NEJMoa2032183. |
+\*The percentages reported are the **mean change from baseline** in body weight at the end of the double‑blind treatment period that was pre‑specified as the primary efficacy endpoint (72 weeks for STEP 1 and 68 weeks for SURMOUNT‑1).
 
-**Sources**
+---
 
-1. Jastreboff AM, et al. “Tirzepatide Once Weekly for the Treatment of Obesity.” *N Engl J Med*. 2022;387:205‑216. https://doi.org/10.1056/NEJMoa2206226.
-2. Wilding JPH, et al. “Once‑Weekly Semaglutide in Adults with Overweight or Obesity.” *N Engl J Med*. 2021;384:989‑1002. https://doi.org/10.1056/NEJMoa2032183.
+### Sources
 
-Both studies met their primary efficacy endpoints by demonstrating statistically significant and clinically meaningful reductions in body weight, with the percentages above representing the mean weight loss observed at the pre‑specified primary time points.
+1. **STEP 1**
+   - Ludwig, D., et al. “Effect of Tirzepatide vs Placebo on Weight Loss in Adults with Obesity.” *The New England Journal of Medicine* 389, no. 21 (2023): 2017‑2028. DOI: 10.1056/NEJMoa2207203.
+   - The abstract and full text state: “At week 72, mean percent change in body weight was –15.0 % (SE 0.4) with tirzepatide 15 mg vs –2.4 % (SE 0.2) with placebo (P < 0.001).”
 
-Usage detail: `{'completion_tokens': 554, 'prompt_tokens': 135, 'total_tokens': 689, 'completion_tokens_details': None, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 0}, 'cache_read_input_tokens': 0}`
+2. **SURMOUNT‑1**
+   - Wilding, J. P. H., et al. “Once‑weekly Semaglutide in Adults with Overweight or Obesity.” *The New England Journal of Medicine* 384, no. 11 (2021): 989‑1002. DOI: 10.1056/NEJMoa2032183.
+   - The primary endpoint result is reported as: “At week 68, mean percent change in body weight was –14.9 % (SE 0.2) with semaglutide 2.4 mg vs –2.4 % (SE 0.2) with placebo (P < 0.001).”
+
+These two phase‑III, randomized, placebo‑controlled trials represent the largest published data sets on tirzepatide (STEP 1) and on the high‑dose formulation of semaglutide (SURMOUNT‑1) for obesity treatment.
+
+Usage detail: `{'completion_tokens': 757, 'prompt_tokens': 135, 'total_tokens': 892, 'completion_tokens_details': None, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 0}, 'cache_read_input_tokens': 0}`
 
 ### alias_resolution
 
-_Reasoning summary returned by the model: Need dataset, but none provided. So answer not found._
-
 not found in the dataset
 
-Usage detail: `{'completion_tokens': 27, 'prompt_tokens': 205, 'total_tokens': 232, 'completion_tokens_details': None, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 128}, 'cache_read_input_tokens': 128}`
+Usage detail: `{'completion_tokens': 29, 'prompt_tokens': 205, 'total_tokens': 234, 'completion_tokens_details': None, 'prompt_tokens_details': {'audio_tokens': None, 'cached_tokens': 0}, 'cache_read_input_tokens': 0}`
 
 ## Limitations observed
 
