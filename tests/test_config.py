@@ -15,7 +15,10 @@ def test_project_config_loads_for_dev() -> None:
     cfg = ProjectConfig.from_yaml(str(PROJECT_CONFIG), "dev")
 
     assert cfg.full_volume_path == "llmops_dev.bharadwajpopuri.evidence_files"
-    assert cfg.warehouse_id == "2203095b00ed7e5b"
+    assert cfg.warehouse_id == "65d92a5dcf046c9d"
+    # The two embedding names (README, "Models"): the serving endpoint for ai_query, the gateway service for the client.
+    assert cfg.embedding_endpoint == "databricks-gte-large-en"
+    assert cfg.embedding_service == "course_ops.gateway.embed"
     # Provisioned values the retrieval foundation reads (lecture 2): the Lakebase project and the usage policy.
     assert cfg.lakebase_instance == "lb-llmops-bharadwajpopuri"
     assert cfg.usage_policy_id == "995f545e-7885-3c66-9825-046d051e0122"
