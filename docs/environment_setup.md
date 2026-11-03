@@ -38,12 +38,18 @@ $ databricks bundle validate -t dev
 Name: llmops-bharadwajpopuri
 Target: dev
 Workspace:
-  Host: https://dbc-88df4c2c-4033.cloud.databricks.com
+  Host: https://dbc-e81ca4d2-f6bd.cloud.databricks.com
   User: bharadwajpopuri@live.com
   Path: /Workspace/Users/bharadwajpopuri@live.com/.bundle/dev/llmops-bharadwajpopuri
 
 Validation OK!
 ```
+
+The host above is the course workspace since 2026-11-03 (the teachers moved the course and pointed
+`databricks.yml` and `project_config.yml` at it in PR #3; the first weeks ran in
+`dbc-88df4c2c-4033`). After a move the OAuth profile is signed in again against the new host,
+`databricks auth login --host <host> --profile course`, because the CLI refuses a profile whose host
+differs from the bundle target's.
 
 That one command proves the map (`databricks.yml`), the badge (the OAuth profile) and the CLI at
 once: the bundle resolved the target, the workspace host and the deploying identity, under the user's
