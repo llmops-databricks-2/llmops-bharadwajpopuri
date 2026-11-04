@@ -19,7 +19,6 @@ document vectors embeds the queries, so both live in one vector space.
 
 import re
 import time
-import urllib.parse
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -43,9 +42,9 @@ from psycopg import sql
 from arxiv_curator.config import ProjectConfig
 from evidence_curator.chunking import SECTIONS
 from evidence_curator.gateway import create_embeddings, gateway_client
+from evidence_curator.lakebase import DEFAULT_DATABASE, LakebaseConnector
 
 EMBEDDING_DIMENSION = 1024  # GTE Large through course_ops.gateway.embed
-DEFAULT_DATABASE = "databricks_postgres"  # every Lakebase branch starts with this database
 RRF_K = 60  # the usual constant of reciprocal rank fusion
 CANDIDATES = 50  # candidates taken from each ranking before fusion
 
@@ -160,50 +159,39 @@ class LakebaseChunkStore:
                 raise ValueError(f"Not a plain SQL identifier: {name!r}")
         self.cfg = config
         self.w = workspace or WorkspaceClient()
-        self.project_name = f"projects/{config.lakebase_instance}"
-        self.branch_name = branch
-        self.database = database
+        self.connector = LakebaseConnector(config.lakebase_instance, self.w, database=database, branch=branch)
+        self.project_name = self.connector.project_name
         self.source_table_full_name = f"{config.catalog}.{config.schema}.{source_table}"
         self.synced_table_id = f"{config.catalog}.{config.schema}.{synced_table}"
         self.pg_schema = config.schema
         self.pg_table = synced_table
         self.embedding_dimension = embedding_dimension
         self._embedding_client = embedding_client
-        self._endpoint_name: str | None = None
-        self._host: str | None = None
 
-    # ------------------------------------------------------------------ connection
+    # ------------------------------------------------------------------ connection, through the shared connector
+
+    @property
+    def branch_name(self) -> str | None:
+        """The Lakebase branch in use, once resolved (or as given)."""
+        return self.connector.branch_name
+
+    @property
+    def database(self) -> str:
+        """The Postgres database of the branch."""
+        return self.connector.database
 
     def resolve_endpoint(self) -> tuple[str, str]:
-        """Find the branch's compute endpoint and host (the first branch of the project unless one is given)."""
-        if self._endpoint_name is None or self._host is None:
-            if self.branch_name is None:
-                branches = list(self.w.postgres.list_branches(parent=self.project_name))
-                if not branches:
-                    raise RuntimeError(f"{self.project_name} has no branches")
-                self.branch_name = branches[0].name
-            endpoints = list(self.w.postgres.list_endpoints(parent=self.branch_name))
-            if not endpoints:
-                raise RuntimeError(f"{self.branch_name} has no compute endpoint")
-            self._endpoint_name = endpoints[0].name
-            self._host = endpoints[0].status.hosts.host
-        return self._endpoint_name, self._host
+        """Find the branch's compute endpoint and host (see `LakebaseConnector`)."""
+        return self.connector.resolve_endpoint()
 
     def connection_string(self) -> str:
-        """Build a Postgres URI with a freshly minted OAuth token for the current identity (never logged)."""
-        endpoint_name, host = self.resolve_endpoint()
-        credential = self.w.postgres.generate_database_credential(endpoint=endpoint_name)
-        # A service principal (OAuth M2M, as in a deployment job) logs in as its client id; a person as their user name.
-        if self.w.config.auth_type == "oauth-m2m" and self.w.config.client_id:
-            username = self.w.config.client_id
-        else:
-            username = urllib.parse.quote_plus(self.w.current_user.me().user_name)
-        return f"postgresql://{username}:{credential.token}@{host}:5432/{self.database}?sslmode=require"
+        """Build a Postgres URI with a freshly minted token for the current identity (never logged)."""
+        return self.connector.connection_string()
 
     @contextmanager
     def connect(self, autocommit: bool = True) -> Iterator[psycopg.Connection]:
         """Open one connection with a fresh token; closed on exit."""
-        with psycopg.connect(self.connection_string(), autocommit=autocommit) as conn:
+        with self.connector.connect(autocommit=autocommit) as conn:
             yield conn
 
     # ------------------------------------------------------------------ synced table
