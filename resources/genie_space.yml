@@ -5,7 +5,8 @@
 # linked publications, aliases); evidence *inside* papers is the search_papers tool's job.
 #
 # Genie validates the serialized space strictly: every id is 32 lowercase hex characters, id-keyed
-# lists are sorted by id, and column_configs are sorted by column_name. The catalog and schema come
+# lists are sorted by id, column_configs are sorted by column_name, and data_sources.tables are
+# sorted by identifier (the API rejects the space otherwise: INVALID_PARAMETER_VALUE). The catalog and schema come
 # from the bundle variables, so the acc and prd targets point the space at their own catalogs.
 resources:
   genie_spaces:
@@ -27,6 +28,31 @@ resources:
               question: ["Which trials compare two therapies head to head?"]
         data_sources:
           tables:
+            - identifier: "${var.catalog}.${var.schema}.drug_aliases"
+              column_configs:
+                - column_name: alias
+                  description: ["A name a therapy goes by: brand (Wegovy, Zepbound, Saxenda), sponsor code (NN9535, LY3298176), dose label (semaglutide 2.4 mg) or mechanism."]
+                  enable_entity_matching: true
+                - column_name: alias_type
+                  description: ["inn, brand, sponsor_code, dose_label or mechanism."]
+                - column_name: therapy
+                  description: ["Canonical therapy the alias maps to; joins trials.therapy."]
+            - identifier: "${var.catalog}.${var.schema}.trial_references"
+              column_configs:
+                - column_name: citation
+                  description: ["Formatted citation of the publication as the registry gives it."]
+                - column_name: nct_id
+                  description: ["Trial the publication is linked to; joins trials.nct_id."]
+                  enable_entity_matching: true
+                - column_name: pmid
+                  description: ["PubMed identifier of the publication. One trial has many; one PMID can be linked to several trials, so count DISTINCT pmid."]
+                  synonyms: ["publication", "paper", "PubMed id"]
+                - column_name: reference_type
+                  description: ["Registry label: RESULT (reports results of this trial), BACKGROUND (cited by the sponsor), DERIVED (found by PubMed linkage)."]
+                - column_name: retrieved_at
+                  exclude: true
+                - column_name: source
+                  exclude: true
             - identifier: "${var.catalog}.${var.schema}.trials"
               column_configs:
                 - column_name: acronym
@@ -118,31 +144,6 @@ resources:
                 - column_name: therapy
                   description: ["Canonical therapy the trial is filed under: semaglutide, tirzepatide or liraglutide (lower case). Brand and code names are in drug_aliases."]
                   synonyms: ["drug", "treatment", "medicine"]
-            - identifier: "${var.catalog}.${var.schema}.trial_references"
-              column_configs:
-                - column_name: citation
-                  description: ["Formatted citation of the publication as the registry gives it."]
-                - column_name: nct_id
-                  description: ["Trial the publication is linked to; joins trials.nct_id."]
-                  enable_entity_matching: true
-                - column_name: pmid
-                  description: ["PubMed identifier of the publication. One trial has many; one PMID can be linked to several trials, so count DISTINCT pmid."]
-                  synonyms: ["publication", "paper", "PubMed id"]
-                - column_name: reference_type
-                  description: ["Registry label: RESULT (reports results of this trial), BACKGROUND (cited by the sponsor), DERIVED (found by PubMed linkage)."]
-                - column_name: retrieved_at
-                  exclude: true
-                - column_name: source
-                  exclude: true
-            - identifier: "${var.catalog}.${var.schema}.drug_aliases"
-              column_configs:
-                - column_name: alias
-                  description: ["A name a therapy goes by: brand (Wegovy, Zepbound, Saxenda), sponsor code (NN9535, LY3298176), dose label (semaglutide 2.4 mg) or mechanism."]
-                  enable_entity_matching: true
-                - column_name: alias_type
-                  description: ["inn, brand, sponsor_code, dose_label or mechanism."]
-                - column_name: therapy
-                  description: ["Canonical therapy the alias maps to; joins trials.therapy."]
         instructions:
           text_instructions:
             - id: "30000000000000000000000000000001"
