@@ -1,0 +1,30 @@
+# Lecture 3, step 3: test every tool of the agent directly, before any model is allowed to choose
+# it. One serverless notebook task runs notebooks/agent_tools_check.py against the dev resources:
+# the local tools (search_papers on the Lakebase chunk table, resolve_therapy), the argument gate
+# of the registry, and the Genie space through its managed MCP server. The space ID is passed from
+# the deployed resource, as the course's lecture3_tools.yml does, so the notebook never carries a
+# hard-coded ID. Same conventions as the other jobs: runs as the deployer, serverless environment 5,
+# the course usage policy. The notebook also runs locally (VS Code, OAuth) with GENIE_SPACE_ID set.
+resources:
+  jobs:
+    agent_tools_check:
+      name: job-agent-tools-check-bharadwajpopuri-${bundle.target}
+      budget_policy_id: "${var.usage_policy_id}"
+      max_concurrent_runs: 1
+      parameters:
+        - name: env
+          default: ${bundle.target}
+        - name: genie_space_id
+          default: ${resources.genie_spaces.evidence-curator-space.id}
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "5"
+            dependencies:
+              - ../dist/*.whl
+      tasks:
+        - task_key: agent_tools_check
+          environment_key: default
+          timeout_seconds: 1800
+          notebook_task:
+            notebook_path: ../notebooks/agent_tools_check.py

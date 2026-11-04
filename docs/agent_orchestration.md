@@ -165,6 +165,7 @@ time — direct SQL first, then the tool, then the agent.
 | `src/evidence_curator/memory.py` | `LakebaseMemory` against `lakebase_instance`: schema, owner-scoped load/save, idempotent appends |
 | `src/evidence_curator/agent.py` | The loop above: budgets, validation, structured errors, limit result |
 | `resources/genie_space.yml` | `evidence-curator-space` over `trials`, `trial_references`, `drug_aliases` with column descriptions and example SQL |
+| `resources/agent_tools.job.yml`, `notebooks/agent_tools_check.py` | Step 3: every tool run directly, no model, with the space ID passed from the deployed resource; the output is the evidence of the tool layer |
 | `resources/agent.job.yml` | Job running `notebooks/agent_experiments.py` (the verification set) with the space ID as a parameter |
-| `tests/test_tools.py`, `tests/test_agent.py` | Callables tested directly; the loop tested against a stub model that scripts tool calls, errors and the budget |
-| `docs/agent_log.md` | Test-run output: tool selection, successful result, controlled failure, memory isolation (console captures stay local; `docs/evidence/` is gitignored since the lecture-2 review) |
+| `tests/test_tools.py`, `tests/test_agent.py` | Callables tested with stubs (argument gate, result shaping, Genie polling); the loop tested against a stub model that scripts tool calls, errors and the budget |
+| `docs/agent_log.md`, `docs/evidence/` | Test-run output: tool selection, successful result, controlled failure, memory isolation |
