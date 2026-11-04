@@ -18,7 +18,7 @@ from typing import Any
 
 import httpx
 from databricks.sdk import WorkspaceClient
-from openai import OpenAI, RateLimitError
+from openai import BadRequestError, OpenAI, RateLimitError
 from openai.types import CreateEmbeddingResponse
 
 GATEWAY_PATH = "/ai-gateway/mlflow/v1"
@@ -171,6 +171,11 @@ def _next_wait(previous: float) -> float:
     return min(previous * 2, RATE_LIMIT_MAX_WAIT_S)
 
 
+def is_transient_bad_request(exc: BaseException) -> bool:
+    """Whether a 400 from the gateway is its 'try again later' condition rather than a bad request."""
+    return "try again later" in str(exc).lower()
+
+
 def create_embeddings(
     client: OpenAI,
     model: str,
@@ -178,13 +183,21 @@ def create_embeddings(
     usage: EmbeddingUsage | None = None,
     max_wait_s: float = RATE_LIMIT_BUDGET_S,
 ) -> CreateEmbeddingResponse:
-    """One embeddings call that waits out the gateway's per-minute rate limit instead of failing on it."""
+    """One embeddings call that waits out the gateway's per-minute rate limit instead of failing on it.
+
+    The gateway also answers with a 400 `BAD_REQUEST: Cannot create or query foundation model
+    endpoints, please try again later` while its backing endpoint is unavailable (seen 2026-11-04);
+    that is a transient condition dressed as a client error, so it is waited out the same way,
+    within the same budget. Any other 400 is a real request error and surfaces at once.
+    """
     usage = usage or EmbeddingUsage(model=model)
     delay = RATE_LIMIT_FIRST_WAIT_S
     while True:
         try:
             return client.embeddings.create(model=model, input=list(inputs))
-        except RateLimitError:
+        except (RateLimitError, BadRequestError) as exc:
+            if isinstance(exc, BadRequestError) and not is_transient_bad_request(exc):
+                raise
             if usage.rate_limit_wait_s + delay > max_wait_s:
                 raise
             usage.rate_limit_hits += 1

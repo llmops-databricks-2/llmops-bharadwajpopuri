@@ -182,3 +182,38 @@ def test_create_embeddings_retries_single_calls(monkeypatch: pytest.MonkeyPatch)
 
     assert gateway.count_tokens(client, "course_ops.gateway.embed", "MLOps is awesome") == 5  # type: ignore[arg-type]
     assert slept == [15.0] and embeddings.resets == 1
+
+
+def test_create_embeddings_waits_out_the_gateways_transient_400(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The gateway's 'Cannot create or query foundation model endpoints, please try again later' is retried; other 400s are not."""
+    import httpx
+    from openai import BadRequestError
+
+    import evidence_curator.gateway as gateway
+
+    def bad_request(message: str) -> BadRequestError:
+        response = httpx.Response(400, request=httpx.Request("POST", "https://example/ai-gateway/mlflow/v1/embeddings"))
+        return BadRequestError(message, response=response, body={"error_code": "BAD_REQUEST", "message": message})
+
+    class _Flaky(_Embeddings):
+        def __init__(self, failures: list[BadRequestError]) -> None:
+            super().__init__()
+            self.failures = failures
+
+        def create(self, model: str, input: list[str]) -> _Response:  # noqa: A002 - the OpenAI parameter name
+            if self.failures:
+                raise self.failures.pop(0)
+            return super().create(model, input)
+
+    slept: list[float] = []
+    monkeypatch.setattr(gateway.time, "sleep", lambda seconds: slept.append(seconds))
+
+    transient = bad_request("BAD_REQUEST: Cannot create or query foundation model endpoints, please try again later.")
+    client = type("Client", (), {"embeddings": _Flaky([transient])})()
+    usage = gateway.EmbeddingUsage(model="course_ops.gateway.embed")
+    gateway.create_embeddings(client, "course_ops.gateway.embed", ["a query"], usage=usage)  # type: ignore[arg-type]
+    assert slept == [15.0] and usage.rate_limit_hits == 1
+
+    client = type("Client", (), {"embeddings": _Flaky([bad_request("BAD_REQUEST: input must not be empty")])})()
+    with pytest.raises(BadRequestError, match="must not be empty"):
+        gateway.create_embeddings(client, "course_ops.gateway.embed", [""])  # type: ignore[arg-type]
