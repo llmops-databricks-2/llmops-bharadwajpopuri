@@ -94,16 +94,21 @@ class AgentResponse:
     @property
     def citations(self) -> list[str]:
         """PMCIDs and NCT IDs named in the answer, in order of first appearance."""
-        seen: list[str] = []
-        for match in _CITATION.findall(self.answer):
-            if match not in seen:
-                seen.append(match)
-        return seen
+        return citations_in(self.answer)
 
     @property
     def tools_used(self) -> list[str]:
         """Tool names in call order."""
         return [call.name for call in self.tool_calls]
+
+
+def citations_in(text: str) -> list[str]:
+    """Return the PMCIDs and NCT IDs named in a text, in order of first appearance."""
+    seen: list[str] = []
+    for match in _CITATION.findall(text):
+        if match not in seen:
+            seen.append(match)
+    return seen
 
 
 def _usage(response: Any) -> tuple[int, int]:  # noqa: ANN401 - the OpenAI response object

@@ -1,10 +1,16 @@
-# Lecture 3, step 3: test every tool of the agent directly, before any model is allowed to choose
-# it. One serverless notebook task runs notebooks/agent_tools_check.py against the dev resources:
-# the local tools (search_papers on the Lakebase chunk table, resolve_therapy), the argument gate
-# of the registry, and the Genie space through its managed MCP server. The space ID is passed from
-# the deployed resource, as the course's lecture3_tools.yml does, so the notebook never carries a
-# hard-coded ID. Same conventions as the other jobs: runs as the deployer, serverless environment 5,
-# the course usage policy. The notebook also runs locally (VS Code, OAuth) with GENIE_SPACE_ID set.
+# Lecture 3: the agent's tools and memory, tested one layer at a time. Two serverless notebook
+# tasks, one after the other (the gateway's rate limits):
+#
+#   agent_tools_check   every tool run directly, no model: search_papers on the Lakebase chunk table,
+#                       resolve_therapy, the registry's argument gate, the Genie space through its
+#                       managed MCP server (and through the SDK as a cross-check)
+#   agent_experiments   the verification set V1–V8 through the agent, the fixed-RAG baseline, and
+#                       session memory in Lakebase (continuity, a fresh session, another owner)
+#
+# The space ID is passed from the deployed resource, as the course's lecture3_tools.yml does, so no
+# notebook carries a hard-coded ID. Same conventions as the other jobs: runs as the deployer,
+# serverless environment 5, the course usage policy. Both notebooks also run locally (VS Code, OAuth)
+# with GENIE_SPACE_ID set, which is how docs/agent_tools_log.md and docs/agent_log.md are written.
 resources:
   jobs:
     agent_tools_check:
@@ -28,3 +34,10 @@ resources:
           timeout_seconds: 1800
           notebook_task:
             notebook_path: ../notebooks/agent_tools_check.py
+        - task_key: agent_experiments
+          depends_on:
+            - task_key: agent_tools_check
+          environment_key: default
+          timeout_seconds: 2400
+          notebook_task:
+            notebook_path: ../notebooks/agent_experiments.py

@@ -160,12 +160,16 @@ time — direct SQL first, then the tool, then the agent.
 
 | File | Purpose |
 | --- | --- |
-| `src/evidence_curator/tools.py` | `ToolInfo` registry; specs and callables for `search_papers`, `resolve_therapy`; validation |
-| `src/evidence_curator/mcp_tools.py` | Discovery of the Genie MCP tools and the `query_trials` wrapper with bounded polling |
-| `src/evidence_curator/memory.py` | `LakebaseMemory` against `lakebase_instance`: schema, owner-scoped load/save, idempotent appends |
-| `src/evidence_curator/agent.py` | The loop above: budgets, validation, structured errors, limit result |
-| `resources/genie_space.yml` | `evidence-curator-space` over `trials`, `trial_references`, `drug_aliases` with column descriptions and example SQL |
-| `resources/agent_tools.job.yml`, `notebooks/agent_tools_check.py` | Step 3: every tool run directly, no model, with the space ID passed from the deployed resource; the output is the evidence of the tool layer |
-| `resources/agent.job.yml` | Job running `notebooks/agent_experiments.py` (the verification set) with the space ID as a parameter |
-| `tests/test_tools.py`, `tests/test_agent.py` | Callables tested with stubs (argument gate, result shaping, Genie polling); the loop tested against a stub model that scripts tool calls, errors and the budget |
-| `docs/agent_log.md`, `docs/evidence/` | Test-run output: tool selection, successful result, controlled failure, memory isolation |
+| `src/evidence_curator/tools.py` | `ToolInfo` and `ToolRegistry`: specifications, the argument gate (`execute`), `search_papers`, `resolve_therapy` |
+| `src/evidence_curator/mcp_tools.py` | Discovery of managed MCP servers' tools; `GenieSpace` wrapping the space's query and poll tools as `query_trials` with bounded polling |
+| `src/evidence_curator/lakebase.py` | The Lakebase connection (branch → endpoint → credential for the current identity), shared by the chunk store and memory |
+| `src/evidence_curator/memory.py` | `LakebaseMemory`: schema per catalog, owner-scoped load/save, idempotent appends per turn, replay ordered by id |
+| `src/evidence_curator/agent.py` | `EvidenceCuratorAgent`, the loop above: budgets, validation, structured errors, limit result; `rag_answer`, the fixed baseline |
+| `resources/genie_space.yml` | `evidence-curator-space` over `trials`, `trial_references`, `drug_aliases` with column descriptions, instructions and example SQL |
+| `resources/agent_tools.job.yml` | Job of two tasks, the space ID passed from the deployed resource: `agent_tools_check` then `agent_experiments` |
+| `notebooks/agent_tools_check.py` → `docs/agent_tools_log.md` | Step 3: every tool run directly, no model; the registry gate; Genie through MCP and through the SDK |
+| `notebooks/agent_experiments.py` → `docs/agent_log.md` | Steps 4–5: V1–V8 through the agent (selection, success, controlled failures, the budget), the workflow-versus-agent comparison, memory continuity and isolation |
+| `tests/test_tools.py`, `tests/test_memory.py`, `tests/test_agent.py` | Stubs for the store, the MCP client, the connection and the model: the argument gate, result shaping, Genie polling, owner scoping, idempotency, the message protocol, budgets, memory load/save |
+
+Console captures of the runs stay local (`docs/evidence/` is gitignored since the lecture-2 review); the two
+Markdown logs are what the pull request points to.
