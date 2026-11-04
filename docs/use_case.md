@@ -29,7 +29,7 @@ refreshes, additional indications, broader literature coverage, cross-trial effi
 
 ## Data
 
-**Structured data (this week).** 30 ClinicalTrials.gov records, pinned by NCT ID in
+**Structured data (lecture 1).** 30 ClinicalTrials.gov records, pinned by NCT ID in
 `src/evidence_curator/seed.py` and fetched through the ClinicalTrials.gov API v2 into
 `llmops_dev.bharadwajpopuri.trials`: design, status, sponsor, phase, enrollment, planned primary
 outcomes, dates, posted-results flag, and a retrieval timestamp on every row. The registry's own
@@ -37,13 +37,18 @@ publication links (PMIDs) land in `trial_references`, the seed of the paper-to-t
 hand-built alias table (`drug_aliases`) maps INN, brand, sponsor code and dose labels to one canonical
 therapy name.
 
-**Documents (next weeks).** 15–20 full-text papers on the three therapies from the PubMed Central Open
-Access Subset, limited to CC BY / CC0 licences: loaded into a Unity Catalog volume, parsed with
-`ai_parse_document`, chunked, embedded through `course_ops.gateway.embed`, and indexed in Lakebase
-pgvector (no Vector Search endpoint is provisioned in this workspace). Pivotal results are often
-paywalled, so the open-access set leans toward secondary and pooled analyses, meta-analyses and
-reviews; where a pivotal result exists only behind a paywall, the brief cites the registry's posted
-results and says so.
+**Documents (lecture 2).** 24 open-access full-text papers on the three therapies, derived from the
+publication links the registry itself records for the pinned trials (`trial_references` → PMC ID
+converter → PMC Article Datasets on AWS, the route NCBI documents now that its OA web service is
+discontinued): loaded into the `evidence_files` volume, parsed with `ai_parse_document`, chunked two
+ways (the course's per-element baseline and a section-aware alternative), embedded through
+`course_ops.gateway.embed`, and mirrored into Lakebase pgvector as a synced table (no Vector Search
+endpoint is provisioned in this workspace). Any Creative Commons licence is accepted and recorded per
+paper (CC BY alone would have left liraglutide with two papers); briefs cite passages rather than
+reproduce them. Pivotal results are often paywalled, so the open-access set leans toward secondary and
+pooled analyses; where a pivotal result exists only behind a paywall, the brief cites the registry's
+posted results and says so. Details and decisions: [retrieval_foundation.md](retrieval_foundation.md),
+the corpus in [corpus.md](corpus.md).
 
 **Provenance rules.** Registry metadata (planned endpoints, enrollment, status) is kept distinct from
 published findings, and every trial row carries its retrieval date.

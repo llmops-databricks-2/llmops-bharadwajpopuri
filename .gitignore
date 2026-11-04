@@ -63,3 +63,7 @@ mlartifacts/
 # Temporary files
 *.tmp
 *.bak
+
+# Run captures and recorded service responses stay on the machine that made them (review of PR #2)
+docs/evidence/
+tests/fixtures/

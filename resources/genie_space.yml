@@ -1,0 +1,184 @@
+# The Genie space of the Evidence Curator: natural-language questions over the registry tables
+# written by the prepare_trials job (week 2). The agent reaches it through the managed MCP server
+# `{host}/api/2.0/mcp/genie/{space_id}` as the `query_trials` tool; people can also open it in the
+# workspace UI. It answers questions *about* trials (counts, phases, statuses, sponsors, dates,
+# linked publications, aliases); evidence *inside* papers is the search_papers tool's job.
+#
+# Genie validates the serialized space strictly: every id is 32 lowercase hex characters, id-keyed
+# lists are sorted by id, column_configs are sorted by column_name, and data_sources.tables are
+# sorted by identifier (the API rejects the space otherwise: INVALID_PARAMETER_VALUE). The catalog and schema come
+# from the bundle variables, so the acc and prd targets point the space at their own catalogs.
+resources:
+  genie_spaces:
+    evidence-curator-space:
+      title: evidence-curator-space-${bundle.target}
+      description: Ask about the 30 GLP-1 obesity trials of the Evidence Curator (semaglutide, tirzepatide, liraglutide), their registry fields, linked publications and drug aliases.
+      warehouse_id: "${var.warehouse_id}"
+      serialized_space:
+        version: 2
+        config:
+          sample_questions:
+            - id: "10000000000000000000000000000001"
+              question: ["How many trials are phase 3 per therapy, and how many of those have posted results?"]
+            - id: "10000000000000000000000000000002"
+              question: ["Which publications are linked to NCT03548935?"]
+            - id: "10000000000000000000000000000003"
+              question: ["Which trials are still recruiting or active, and when did they start?"]
+            - id: "10000000000000000000000000000004"
+              question: ["Which trials compare two therapies head to head?"]
+        data_sources:
+          tables:
+            - identifier: "${var.catalog}.${var.schema}.drug_aliases"
+              column_configs:
+                - column_name: alias
+                  description: ["A name a therapy goes by: brand (Wegovy, Zepbound, Saxenda), sponsor code (NN9535, LY3298176), dose label (semaglutide 2.4 mg) or mechanism."]
+                  enable_entity_matching: true
+                - column_name: alias_type
+                  description: ["inn, brand, sponsor_code, dose_label or mechanism."]
+                - column_name: therapy
+                  description: ["Canonical therapy the alias maps to; joins trials.therapy."]
+            - identifier: "${var.catalog}.${var.schema}.trial_references"
+              column_configs:
+                - column_name: citation
+                  description: ["Formatted citation of the publication as the registry gives it."]
+                - column_name: nct_id
+                  description: ["Trial the publication is linked to; joins trials.nct_id."]
+                  enable_entity_matching: true
+                - column_name: pmid
+                  description: ["PubMed identifier of the publication. One trial has many; one PMID can be linked to several trials, so count DISTINCT pmid."]
+                  synonyms: ["publication", "paper", "PubMed id"]
+                - column_name: reference_type
+                  description: ["Registry label: RESULT (reports results of this trial), BACKGROUND (cited by the sponsor), DERIVED (found by PubMed linkage)."]
+                - column_name: retrieved_at
+                  exclude: true
+                - column_name: source
+                  exclude: true
+            - identifier: "${var.catalog}.${var.schema}.trials"
+              column_configs:
+                - column_name: acronym
+                  description: ["Trial acronym from the registry, for example STEP 1, SURMOUNT-J, SELECT. Empty for some trials: match names on seed_note, brief_title and official_title as well."]
+                  synonyms: ["trial name", "study name"]
+                  enable_entity_matching: true
+                - column_name: brief_title
+                  description: ["Short registry title of the trial."]
+                  enable_entity_matching: true
+                - column_name: collaborators
+                  exclude: true
+                - column_name: completion_date
+                  description: ["Study completion date as an ISO string, YYYY-MM-DD (occasionally YYYY-MM). Not a date type: cast with to_date before date arithmetic."]
+                  enable_format_assistance: true
+                - column_name: conditions
+                  description: ["Conditions studied, comma-separated, for example Obesity, Overweight, Type 2 Diabetes."]
+                - column_name: eligibility_criteria
+                  description: ["Full inclusion and exclusion criteria text. Long; show only when asked."]
+                - column_name: enrollment_count
+                  description: ["Number of participants enrolled (or planned, see enrollment_type)."]
+                  synonyms: ["enrolled", "participants", "sample size"]
+                - column_name: enrollment_type
+                  description: ["ACTUAL when enrollment_count is the final number, ESTIMATED when the trial is still planned or running."]
+                - column_name: has_results
+                  description: ["true when the registry has posted results for the trial."]
+                  synonyms: ["results posted", "posted results"]
+                - column_name: intervention_model
+                  description: ["Registry design term: PARALLEL, CROSSOVER, SINGLE_GROUP."]
+                - column_name: intervention_therapies
+                  description: ["All study therapies of the trial among semaglutide, tirzepatide and liraglutide, comma-separated. Head-to-head trials list two: STEP 8 is semaglutide,liraglutide and SURMOUNT-5 is semaglutide,tirzepatide."]
+                - column_name: interventions
+                  description: ["Interventions as the registry lists them, comma-separated, including placebo and doses."]
+                - column_name: lead_sponsor
+                  description: ["Lead sponsor organisation, for example Novo Nordisk A/S or Eli Lilly and Company."]
+                  synonyms: ["sponsor"]
+                  enable_entity_matching: true
+                - column_name: masking
+                  description: ["Registry masking term: NONE, SINGLE, DOUBLE, TRIPLE, QUADRUPLE."]
+                - column_name: maximum_age
+                  description: ["Maximum eligible age as text, for example 75 Years; empty when none."]
+                - column_name: minimum_age
+                  description: ["Minimum eligible age as text, for example 18 Years or 12 Years (adolescent trials)."]
+                - column_name: n_primary_outcomes
+                  description: ["Number of primary outcome measures."]
+                - column_name: n_references
+                  description: ["Number of publications the registry links to the trial (rows in trial_references)."]
+                - column_name: nct_id
+                  description: ["ClinicalTrials.gov identifier, NCT followed by eight digits. One row per NCT ID; joins trial_references."]
+                  synonyms: ["trial id", "registry id", "NCT number"]
+                  enable_entity_matching: true
+                - column_name: official_title
+                  description: ["Full registry title of the trial."]
+                - column_name: overall_status
+                  description: ["Registry status: COMPLETED, ACTIVE_NOT_RECRUITING or RECRUITING in this snapshot."]
+                  synonyms: ["status", "recruitment status"]
+                - column_name: phase
+                  description: ["Registry phase: PHASE2 or PHASE3 in this snapshot (no spaces)."]
+                - column_name: primary_completion_date
+                  description: ["Primary completion date as an ISO string, YYYY-MM-DD. Cast with to_date before date arithmetic."]
+                  enable_format_assistance: true
+                - column_name: primary_outcomes
+                  description: ["Primary outcome measures as text, pipe-separated."]
+                - column_name: primary_purpose
+                  description: ["Registry purpose: TREATMENT for every trial in this snapshot."]
+                - column_name: program
+                  description: ["Trial programme the trial belongs to: STEP, SELECT (semaglutide), SURMOUNT (tirzepatide), SCALE (liraglutide), or PHASE2 for the phase 2 trials."]
+                  synonyms: ["programme", "trial program"]
+                - column_name: results_first_post_date
+                  description: ["Date results were first posted, ISO string, empty when has_results is false."]
+                  enable_format_assistance: true
+                - column_name: retrieved_at
+                  exclude: true
+                - column_name: seed_note
+                  description: ["One-line description of why the trial is in the snapshot, naming the trial, for example 'SCALE Obesity and Prediabetes: pivotal phase 3'. Use it to find trials by name when acronym is empty."]
+                  enable_entity_matching: true
+                - column_name: sex
+                  description: ["Eligible sex: ALL for every trial in this snapshot."]
+                - column_name: source
+                  exclude: true
+                - column_name: source_url
+                  exclude: true
+                - column_name: sponsor_class
+                  description: ["Registry sponsor class: INDUSTRY for every trial in this snapshot."]
+                - column_name: start_date
+                  description: ["Study start date as an ISO string, YYYY-MM-DD. Cast with to_date before date arithmetic; year(to_date(start_date)) for the start year."]
+                  enable_format_assistance: true
+                - column_name: study_type
+                  description: ["INTERVENTIONAL for every trial in this snapshot."]
+                - column_name: therapy
+                  description: ["Canonical therapy the trial is filed under: semaglutide, tirzepatide or liraglutide (lower case). Brand and code names are in drug_aliases."]
+                  synonyms: ["drug", "treatment", "medicine"]
+        instructions:
+          text_instructions:
+            - id: "30000000000000000000000000000001"
+              content:
+                - "Each row in trials is one ClinicalTrials.gov record of a GLP-1-based obesity trial; 'our trials' or 'the trials' means all rows of this table."
+                - "therapy holds the canonical name in lower case: semaglutide, tirzepatide or liraglutide. When the user names a brand, code or dose (Wegovy, LY3298176, semaglutide 2.4 mg), look it up in drug_aliases to get the therapy, or filter with LOWER(therapy)."
+                - "Head-to-head trials carry both therapies in intervention_therapies; use array_contains(split(intervention_therapies, ','), 'liraglutide') to find every trial that includes a therapy, and therapy for the trial's primary filing."
+                - "phase values are PHASE2 and PHASE3; overall_status values are COMPLETED, ACTIVE_NOT_RECRUITING and RECRUITING. Compare them exactly, in upper case."
+                - "Dates (start_date, primary_completion_date, completion_date, results_first_post_date) are strings in YYYY-MM-DD form; use to_date(column) before comparing or extracting years. Empty strings mean unknown."
+                - "To find a trial by name, match case-insensitively on acronym, seed_note, brief_title and official_title (ILIKE '%SURMOUNT-OSA%'); acronym is empty for several SCALE and STEP trials, so never rely on it alone."
+                - "Publications linked to a trial are rows of trial_references joined on nct_id; count DISTINCT pmid because one PMID can be linked to several trials, and show reference_type with the citation."
+                - "When listing trials show nct_id, acronym (or seed_note when acronym is empty), therapy, phase, overall_status and enrollment_count; order by start_date unless the user asks otherwise."
+                - "Answer only from these three tables. Reported results such as weight loss percentages are not in them: say so rather than estimating."
+          example_question_sqls:
+            - id: "20000000000000000000000000000001"
+              question: ["How many trials are phase 3 per therapy, and how many of those have posted results?"]
+              sql:
+                - "SELECT therapy, COUNT(*) AS phase3_trials, SUM(CASE WHEN has_results THEN 1 ELSE 0 END) AS with_posted_results "
+                - "FROM ${var.catalog}.${var.schema}.trials WHERE phase = 'PHASE3' "
+                - "GROUP BY therapy ORDER BY therapy"
+            - id: "20000000000000000000000000000002"
+              question: ["Which publications are linked to NCT03548935?"]
+              sql:
+                - "SELECT r.pmid, r.reference_type, r.citation "
+                - "FROM ${var.catalog}.${var.schema}.trial_references r WHERE r.nct_id = 'NCT03548935' "
+                - "ORDER BY r.reference_type, r.pmid"
+            - id: "20000000000000000000000000000003"
+              question: ["Which trials are still recruiting or active, and when did they start?"]
+              sql:
+                - "SELECT nct_id, COALESCE(NULLIF(acronym, ''), seed_note) AS trial, therapy, phase, overall_status, enrollment_count, start_date "
+                - "FROM ${var.catalog}.${var.schema}.trials WHERE overall_status IN ('RECRUITING', 'ACTIVE_NOT_RECRUITING') "
+                - "ORDER BY to_date(start_date)"
+            - id: "20000000000000000000000000000004"
+              question: ["Which trials compare two therapies head to head?"]
+              sql:
+                - "SELECT nct_id, COALESCE(NULLIF(acronym, ''), seed_note) AS trial, intervention_therapies, phase, overall_status "
+                - "FROM ${var.catalog}.${var.schema}.trials WHERE size(split(intervention_therapies, ',')) > 1 "
+                - "ORDER BY to_date(start_date)"

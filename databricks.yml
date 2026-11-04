@@ -3,6 +3,8 @@
 
 bundle:
   name: llmops-bharadwajpopuri
+  # 1.20.0 is the first CLI that knows the genie_spaces resource (resources/genie_space.yml).
+  databricks_cli_version: ">= 1.20.0"
 
 # The course package is built as a wheel and installed in every job environment.
 artifacts:
@@ -13,6 +15,23 @@ artifacts:
 
 include:
   - resources/*.yml
+
+# Values the Genie space and the lecture-3 job read from the bundle rather than from
+# project_config.yml (a resource definition cannot load the YAML). Keep the two in step; the
+# acc and prd targets override the catalog below.
+variables:
+  usage_policy_id:
+    description: usage policy for serverless jobs (usage_policy_id in project_config.yml)
+    default: 995f545e-7885-3c66-9825-046d051e0122
+  warehouse_id:
+    description: SQL warehouse of the Genie space (warehouse_id in project_config.yml)
+    default: 65d92a5dcf046c9d
+  catalog:
+    description: Unity Catalog catalog of the trial tables (catalog in project_config.yml)
+    default: llmops_dev
+  schema:
+    description: schema holding trials, trial_references and drug_aliases (schema in project_config.yml)
+    default: bharadwajpopuri
 
 # Three targets in the one course workspace, each writing your schema in its own catalog
 # (project_config.yml). Each is deployed under the home folder of whoever deploys it: you from your
@@ -30,12 +49,16 @@ targets:
 
   # Acceptance: deployed on every merge to main.
   acc:
+    variables:
+      catalog: llmops_acc
     workspace:
       host: https://dbc-e81ca4d2-f6bd.cloud.databricks.com
       root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.target}/${bundle.name}
 
   # Production: deployed after acceptance, once you approve it.
   prd:
+    variables:
+      catalog: llmops_prd
     workspace:
       host: https://dbc-e81ca4d2-f6bd.cloud.databricks.com
       root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.target}/${bundle.name}

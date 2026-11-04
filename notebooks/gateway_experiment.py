@@ -46,7 +46,7 @@ w = WorkspaceClient()
 print(f"Workspace {w.config.host} as {w.current_user.me().user_name}; auth type: {w.config.auth_type}")
 client = gateway_client(w)
 print(f"Gateway base URL: {client.base_url}")
-print(f"Chat service: {cfg.llm_endpoint}; embedding service: {cfg.embedding_endpoint}")
+print(f"Chat service: {cfg.llm_endpoint}; embedding service: {cfg.embedding_service}")
 
 # COMMAND ----------
 
@@ -144,7 +144,7 @@ texts = [
     "STEP 8 was a phase 3 trial of once-weekly semaglutide 2.4 mg versus once-daily liraglutide 3.0 mg in adults with overweight or obesity.",
     "SURMOUNT-OSA evaluated tirzepatide in adults with obesity and moderate-to-severe obstructive sleep apnoea.",
 ]
-embedding_response = client.embeddings.create(model=cfg.embedding_endpoint, input=texts)
+embedding_response = client.embeddings.create(model=cfg.embedding_service, input=texts)
 vectors = [d.embedding for d in embedding_response.data]
 
 
@@ -171,7 +171,7 @@ lines = [
     "# Gateway experiment log",
     "",
     f"Run at {datetime.now(UTC).isoformat(timespec='seconds')} against `{cfg.llm_endpoint}` (chat) and "
-    f"`{cfg.embedding_endpoint}` (embeddings) via `{client.base_url}`.",
+    f"`{cfg.embedding_service}` (embeddings) via `{client.base_url}`.",
     "",
     "| Prompt | Latency (s) | Prompt tokens | Completion tokens | Total | Finish |",
     "|---|---:|---:|---:|---:|---|",

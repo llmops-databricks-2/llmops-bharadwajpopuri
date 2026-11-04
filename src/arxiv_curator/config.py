@@ -21,6 +21,8 @@ class ProjectConfig(BaseModel):
     experiment_path: str = Field(..., description="MLflow experiment path for this environment")
     warehouse_id: str = Field(..., description="Warehouse ID")
     genie_space_id: str | None = Field(None, description="Genie space ID for MCP integration")
+    lakebase_instance: str | None = Field(None, description="Lakebase project provisioned for this student")
+    usage_policy_id: str | None = Field(None, description="Usage policy to set on every serverless resource")
     system_prompt: str = Field(
         default="You are a helpful AI assistant that helps users find and understand research papers.",
         description="System prompt for the agent",
@@ -49,7 +51,10 @@ class ProjectConfig(BaseModel):
         if env not in config_data:
             raise ValueError(f"Environment '{env}' not found in config file")
 
-        return cls(**config_data[env])
+        # The usage policy is one value for all environments, at the top of the file.
+        env_config = dict(config_data[env])
+        env_config.setdefault("usage_policy_id", config_data.get("usage_policy_id"))
+        return cls(**env_config)
 
     @property
     def schema(self) -> str:
